@@ -6,6 +6,6 @@ This repository contains some methods to disassemble and deobfuscate discord mal
 
 # TODO
 - [x] Blank
-- [ ] Vespy
+- [x] Vespy
 - [ ] Luna
 - [ ] W4SP
