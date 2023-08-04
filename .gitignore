@@ -1,6 +1,5 @@
 temp/
-*.exe
 !pycdc.exe
 !pycdas.exe
 __pycache__/
-*.zip
+grabber/
