@@ -261,7 +261,7 @@ class PyInstArchive:
 
 
     def extractFiles(self):
-        extractionDir = os.path.join(os.getcwd(), 'temp', os.path.basename(self.filePath) + '_extracted')
+        extractionDir = os.path.join(os.path.dirname(__file__), "..", 'temp', os.path.basename(self.filePath) + '_extracted')
 
         if not os.path.exists(extractionDir):
             os.mkdir(extractionDir)

@@ -2,7 +2,13 @@ import sys, os, requests
 from utils.pyinxtractor import PyInstArchive
 
 from methods.blank import BlankDeobf
-from methods.vespy import VespyDeobf
+from methods.empyrean import VespyDeobf
+from methods.luna import LunaDeobf
+from methods.notobf import NotObfuscated
+
+from utils.detection import Detection
+
+from os.path import join, dirname, exists
 
 def validate_webhook(webhook):
     return requests.get(webhook)
@@ -11,7 +17,7 @@ def main():
     if len(sys.argv) < 2:
         print("usage: deobf.py [file.exe]")
         exit(0)
-    if not (os.path.exists("temp")): os.mkdir("temp")
+    if not (exists(join(dirname(__file__), "temp"))): os.mkdir(join(dirname(__file__), "temp"))
     arch = PyInstArchive(sys.argv[1])
     if arch.open():
         if arch.checkFile():
@@ -23,15 +29,27 @@ def main():
         else:
             arch.close()
             exit(0)
-    extractiondir = os.path.join(os.getcwd())
-    if (os.path.exists(os.path.join(extractiondir, "blank.aes"))):
+    extractiondir = join(os.getcwd())
+    webhook = ""
+    if Detection.BlankGrabberDetect(extractiondir):
         print("[+] Blank Stealer detected")
         blank = BlankDeobf(extractiondir)
         webhook = blank.Deobfuscate()
-    elif (os.path.exists(os.path.join(extractiondir, "PYZ-00.pyz_extracted", "config.pyc"))):
-        print("[+] Vespy Grabber detected")
+    elif Detection.EmpyreanDetect(extractiondir):
+        print("[+] Empyrean/Vespy Grabber detected")
         vespy = VespyDeobf(extractiondir)
         webhook = vespy.Deobfuscate()
+    elif Detection.BlankObfDetect(extractiondir):
+        luna = LunaDeobf(extractiondir)
+        webhook = luna.Deobfuscate()
+    else:
+        print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
+        notobf = NotObfuscated(extractiondir)
+        webhook = notobf.GetWebhook()
+    
+    if webhook == "" or webhook == None:
+        print("No webhook found.")
+        exit(0)
 
     res = validate_webhook(webhook)
     if res.status_code != 200:
