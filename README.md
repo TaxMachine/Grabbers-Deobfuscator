@@ -19,12 +19,12 @@ if you wish to add a grabber to the methods, Dm me on Discord: `taxmachine` (lin
 - [x] Vespy (python)
 - [x] Luna (python)
 - [x] All the random python grabbers with no obfuscation
-- [ ] W4SP (python)
+- [x] W4SP (python)
 - [ ] Thiefcat (python)
 - [ ] Ben (Java)
 - [ ] QVoid (C#)
 - [ ] Stealerium (C#)
-- [ ] Creal (python)
+- [x] Creal (python)
 
 # Issues
 If you encounter an issue, before creating one on github, please read this. Provide as much informations as possible (stacktraces, with what you used it). If its because your grabber is unsupported, submit your sample in my Discord dms
