@@ -6,7 +6,7 @@ Open cmd.exe (or powershell idfk) and type this in the SAME directory as the scr
 ```cmd
 python deobf.py [yourfile.exe]
 ```
-some grabbers like empyrean needs python3.10 so be sure to check the extractor warnings if there are.
+some grabbers like empyrean need python 3.10 so be sure to check the extractor warnings if there are.
 ![Tutorial](tutorial.gif)
 
 # Decompiler & Disassembler
