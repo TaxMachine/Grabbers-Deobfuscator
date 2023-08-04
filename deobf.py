@@ -40,6 +40,7 @@ def main():
         vespy = VespyDeobf(extractiondir)
         webhook = vespy.Deobfuscate()
     elif Detection.BlankObfDetect(extractiondir):
+        print("[+] Blank Obfuscation detected: possibly luna grabber")
         luna = LunaDeobf(extractiondir)
         webhook = luna.Deobfuscate()
     else:
