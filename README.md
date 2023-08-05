@@ -21,7 +21,7 @@ if you wish to add a grabber to the methods, Dm me on Discord: `taxmachine` (lin
 - [x] All the random python grabbers with no obfuscation
 - [x] W4SP (python)
 - [ ] Thiefcat (python)
-- [ ] Ben (Java)
+- [x] Ben (Java)
 - [ ] QVoid (C#)
 - [ ] Stealerium (C#)
 - [x] Creal (python)

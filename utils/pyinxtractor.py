@@ -357,7 +357,7 @@ class PyInstArchive:
         dirName =  name + '_extracted'
         # Create a directory for the contents of the pyz
         if not os.path.exists(dirName):
-            os.mkdirs(dirName)
+            os.makedirs(dirName)
 
         with open(name, 'rb') as f:
             pyzMagic = f.read(4)

@@ -23,15 +23,11 @@ def main():
     webhook = ""
     if not (exists(join(dirname(__file__), "temp"))): os.makedirs(join(dirname(__file__), "temp"))
     if sys.argv[1].endswith(".jar"):
-        try:
-            dir = unzipJava(sys.argv[1])
-            if Detection.BenGrabberDetect(dir):
-                print("[+] Ben grabber detected")
-                ben = BenDeobf(dir)
-                webhook = ben.Deobfuscate()
-        except ValueError:
-            print("[-] Failed to decompile the file")
-            exit(0)
+        dir = unzipJava(sys.argv[1])
+        if Detection.BenGrabberDetect(dir):
+            print("[+] Ben grabber detected")
+            ben = BenDeobf(dir)
+            webhook = ben.Deobfuscate()
     else:
         arch = PyInstArchive(sys.argv[1])
         if arch.open():

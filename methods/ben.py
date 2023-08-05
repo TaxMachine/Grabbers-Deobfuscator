@@ -8,7 +8,7 @@ class BenDeobf:
     def Deobfuscate(self):
        for root, subdirs, files in os.walk(self.dir):
             for file in files:
-                if file.endswith(".pyc"):
+                if file.endswith(".class"):
                     path = os.path.join(root, file)
                     strings = subprocess.run(["strings", path], stdout=subprocess.PIPE).stdout.decode()
                     try:
