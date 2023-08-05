@@ -1,4 +1,5 @@
-import re, os
+import re
+from os.path import exists, join, sep
 from utils.decompile import disassemblePyc
 
 
@@ -6,8 +7,8 @@ class Detection:
     def BlankObfDetect(dir):
         try:
             ## Very shitty but it works ig
-            file = dir.split(".exe")[0].split(os.path.sep)[len(dir.split(os.path.sep)) - 1] + ".pyc"
-            assembly = disassemblePyc(dir + os.path.sep + file)
+            file = dir.split(".exe")[0].split(sep)[len(dir.split(sep)) - 1] + ".pyc"
+            assembly = disassemblePyc(dir + sep + file)
             keywordstuffidk = [
                 "'eval'",
                 "'getattr'",
@@ -33,10 +34,13 @@ class Detection:
         return False
             
     def BlankGrabberDetect(dir):
-        return os.path.exists(os.path.join(dir, "loader-o.pyc"))
+        return exists(join(dir, "loader-o.pyc"))
     
     def EmpyreanDetect(dir):
-        return os.path.exists(os.path.join(dir, "PYZ-00.pyz_extracted", "config.pyc"))
+        return exists(join(dir, "PYZ-00.pyz_extracted", "config.pyc"))
     
     def BenGrabberDetect(dir):
-        return os.path.exists(os.path.join(dir, "net", "jodah", "typetools"))
+        return exists(join(dir, "net", "jodah", "typetools"))
+    
+    def ThiefcatDetect(dir):
+        return exists(join(dir, "PYZ-00.pyz_extracted", "configparser.pyc")) and exists(join(dir, "PYZ-00.pyz_extracted", "gzip.pyc")) and exists(join(dir, "PYZ-00.pyz_extracted", "lzma.pyc"))

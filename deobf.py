@@ -4,6 +4,7 @@ from utils.pyinxtractor import PyInstArchive
 from methods.blank import BlankDeobf
 from methods.empyrean import VespyDeobf
 from methods.luna import LunaDeobf
+from methods.thiefcat import TheifcatDeobf
 from methods.notobf import NotObfuscated
 
 from methods.ben import BenDeobf
@@ -53,6 +54,10 @@ def main():
             print("[+] Blank Obfuscation detected: possibly luna grabber")
             luna = LunaDeobf(extractiondir)
             webhook = luna.Deobfuscate()
+        elif Detection.ThiefcatDetect(extractiondir):
+            print("[+] Thiefcat Stealer Detected")
+            cat = TheifcatDeobf(extractiondir)
+            webhook = cat.Deobfuscate()
         else:
             print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
             notobf = NotObfuscated(extractiondir)

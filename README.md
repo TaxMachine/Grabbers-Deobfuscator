@@ -7,6 +7,7 @@ Open cmd.exe (or powershell idfk) and type this in the SAME directory as the scr
 python deobf.py [yourfile.exe]
 ```
 some grabbers like empyrean need python 3.10 so be sure to check the extractor warnings if there are.
+**if you have an error with thiefcat deobfuscation, use python 3.11.4**
 ![Tutorial](tutorial.gif)
 
 # Decompiler & Disassembler
@@ -20,7 +21,7 @@ if you wish to add a grabber to the methods, Dm me on Discord: `taxmachine` (lin
 - [x] Luna (python)
 - [x] All the random python grabbers with no obfuscation
 - [x] W4SP (python)
-- [ ] Thiefcat (python)
+- [x] Thiefcat (python)
 - [x] Ben (Java)
 - [ ] QVoid (C#)
 - [ ] Stealerium (C#)
