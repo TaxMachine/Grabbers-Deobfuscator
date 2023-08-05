@@ -37,3 +37,6 @@ class Detection:
     
     def EmpyreanDetect(dir):
         return os.path.exists(os.path.join(dir, "PYZ-00.pyz_extracted", "config.pyc"))
+    
+    def BenGrabberDetect(dir):
+        return os.path.exists(os.path.join(dir, "net", "jodah", "typetools"))

@@ -6,7 +6,10 @@ from methods.empyrean import VespyDeobf
 from methods.luna import LunaDeobf
 from methods.notobf import NotObfuscated
 
+from methods.ben import BenDeobf
+
 from utils.detection import Detection
+from utils.decompile import unzipJava
 
 from os.path import join, dirname, exists
 
@@ -17,36 +20,47 @@ def main():
     if len(sys.argv) < 2:
         print("usage: deobf.py [file.exe]")
         exit(0)
-    if not (exists(join(dirname(__file__), "temp"))): os.mkdir(join(dirname(__file__), "temp"))
-    arch = PyInstArchive(sys.argv[1])
-    if arch.open():
-        if arch.checkFile():
-            if arch.getCArchiveInfo():
-                arch.parseTOC()
-                arch.extractFiles()
-                arch.close()
-                print('[+] Successfully extracted pyinstaller archive: {0}'.format(sys.argv[1]))
-        else:
-            arch.close()
-            exit(0)
-    extractiondir = join(os.getcwd())
     webhook = ""
-    if Detection.BlankGrabberDetect(extractiondir):
-        print("[+] Blank Stealer detected")
-        blank = BlankDeobf(extractiondir)
-        webhook = blank.Deobfuscate()
-    elif Detection.EmpyreanDetect(extractiondir):
-        print("[+] Empyrean/Vespy Grabber detected")
-        vespy = VespyDeobf(extractiondir)
-        webhook = vespy.Deobfuscate()
-    elif Detection.BlankObfDetect(extractiondir):
-        print("[+] Blank Obfuscation detected: possibly luna grabber")
-        luna = LunaDeobf(extractiondir)
-        webhook = luna.Deobfuscate()
+    if not (exists(join(dirname(__file__), "temp"))): os.makedirs(join(dirname(__file__), "temp"))
+    if sys.argv[1].endswith(".jar"):
+        try:
+            dir = unzipJava(sys.argv[1])
+            if Detection.BenGrabberDetect(dir):
+                print("[+] Ben grabber detected")
+                ben = BenDeobf(dir)
+                webhook = ben.Deobfuscate()
+        except ValueError:
+            print("[-] Failed to decompile the file")
+            exit(0)
     else:
-        print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
-        notobf = NotObfuscated(extractiondir)
-        webhook = notobf.GetWebhook()
+        arch = PyInstArchive(sys.argv[1])
+        if arch.open():
+            if arch.checkFile():
+                if arch.getCArchiveInfo():
+                    arch.parseTOC()
+                    arch.extractFiles()
+                    arch.close()
+                    print('[+] Successfully extracted pyinstaller archive: {0}'.format(sys.argv[1]))
+            else:
+                arch.close()
+                exit(0)
+        extractiondir = join(os.getcwd())
+        if Detection.BlankGrabberDetect(extractiondir):
+            print("[+] Blank Stealer detected")
+            blank = BlankDeobf(extractiondir)
+            webhook = blank.Deobfuscate()
+        elif Detection.EmpyreanDetect(extractiondir):
+            print("[+] Empyrean/Vespy Grabber detected")
+            vespy = VespyDeobf(extractiondir)
+            webhook = vespy.Deobfuscate()
+        elif Detection.BlankObfDetect(extractiondir):
+            print("[+] Blank Obfuscation detected: possibly luna grabber")
+            luna = LunaDeobf(extractiondir)
+            webhook = luna.Deobfuscate()
+        else:
+            print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
+            notobf = NotObfuscated(extractiondir)
+            webhook = notobf.GetWebhook()
     
     if webhook == "" or webhook == None:
         print("No webhook found.")
