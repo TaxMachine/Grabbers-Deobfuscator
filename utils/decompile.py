@@ -1,8 +1,8 @@
 import subprocess, sys, zipfile, re
 from os import path, makedirs
 
-PYCDC = "pycdc.exe" if sys.platform == 'nt' else "pycdc"
-PYCDAS = "pycdas.exe" if sys.platform == 'nt' else "pycdas"
+PYCDC = "pycdc.exe" if sys.platform == 'win32' else "pycdc"
+PYCDAS = "pycdas.exe" if sys.platform == 'win32' else "pycdas"
 
 dir = path.join(path.dirname(__file__))
 

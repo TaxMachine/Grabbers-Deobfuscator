@@ -1,5 +1,5 @@
 import re, os, codecs, subprocess
-from utils.deobfuscation import BlankOBF
+from utils.deobfuscation import MatchWebhook
 from utils.decompile import strings
 class NotObfuscated:
     def __init__(self, dir):
@@ -16,7 +16,7 @@ class NotObfuscated:
                     with open(path, "rb") as f:
                         strs = strings(f.read())
                     try:
-                        webhook = BlankOBF.MatchWebhook(strs)
+                        webhook = MatchWebhook(strs)
                         return webhook
                     except ValueError:
                         pass

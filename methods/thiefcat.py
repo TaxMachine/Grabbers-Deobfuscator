@@ -1,9 +1,9 @@
 # Thank you to meisr cuz yes
-import re, base64, subprocess, marshal, datetime, zlib, sys, dis, bz2, lzma, gzip, binascii
+import re, base64, marshal, zlib, dis, bz2, lzma, gzip
 from os import path, walk
 from os.path import join
-from utils.decompile import decompilePyc, disassemblePyc
-from utils.deobfuscation import BlankOBF
+from utils.decompile import decompilePyc, strings
+from utils.deobfuscation import MatchWebhook
 
 class TheifcatDeobf:
     def __init__(self, dir):
@@ -45,8 +45,9 @@ class TheifcatDeobf:
             for file in files:
                 if file.endswith(".pyc"):
                     path = join(root, file)
-                    strings = subprocess.run(["strings", path], stdout=subprocess.PIPE).stdout.decode()
-                    if "CryptUnprotectData" in strings:
+                    with open(path, "rb") as f:
+                        strs = strings(f.read())
+                    if "CryptUnprotectData" in strs:
                         entrypoint = path
         code = decompilePyc(entrypoint)
         bytestr = re.search(r"exec\(marshal.loads\(binascii.a2b_base64\(b'(.*)'\)\)\)", code)
@@ -59,7 +60,7 @@ class TheifcatDeobf:
         while True:
             try:
                 bytecode = self.DecompressBytecodeX(bytecode)
-                webhook = BlankOBF.MatchWebhook(bytecode)
+                webhook = MatchWebhook(bytecode)
                 if webhook: return webhook
             except Exception:
                 pass

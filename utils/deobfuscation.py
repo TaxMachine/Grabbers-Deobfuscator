@@ -1,5 +1,15 @@
 import re, lzma, codecs, base64, os
 
+def MatchWebhook(string):
+        webhookb64 = re.search(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
+        webhook = re.search(r"(https:\/\/(.*?)discord.com\/api\/webhooks\/[0-9]{19}\/[a-zA-Z0-9\-_]{68})", string)
+        if webhookb64:
+            return base64.b64decode(webhookb64.group(1)).decode()
+        elif webhook:
+            return webhook.group(1)
+        else:
+            raise ValueError("No webhook")
+
 class Stage3:
     def __init__(self, first, second, third, fourth):
         self.first = first
@@ -22,16 +32,6 @@ class BlankOBF:
             re.search(r'^_______="(.*)"$', sanitized, re.MULTILINE).group(1)
         )
     
-    def MatchWebhook(string):
-        webhookb64 = re.search(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
-        webhook = re.search(r"(https:\/\/(.*?)discord.com\/api\/webhooks\/[0-9]{19}\/[a-zA-Z0-9\-_]{68})", string)
-        if webhookb64:
-            return base64.b64decode(webhookb64.group(1)).decode()
-        elif webhook:
-            return webhook.group(1)
-        else:
-            raise ValueError("No webhook")
-    
     def DeobfuscateStage4(firstpart, secondpart, thirdpart, fourthpart):
         pythonbytes = b""
         try:
@@ -41,4 +41,4 @@ class BlankOBF:
             print(e)
             raise Exception(e)
         strings = codecs.decode(pythonbytes, 'ascii', errors='ignore')
-        return BlankOBF.MatchWebhook(strings)
+        return MatchWebhook(strings)
