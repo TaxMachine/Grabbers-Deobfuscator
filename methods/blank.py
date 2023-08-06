@@ -1,4 +1,4 @@
-import base64, os, subprocess, zlib, zipfile, re, lzma, codecs, base64, io
+import base64, os, zlib, zipfile, re, base64, io
 from utils.pyaes import AESModeOfOperationGCM
 from utils.decompile import decompilePyc, disassemblePyc
 from utils.deobfuscation import BlankOBF

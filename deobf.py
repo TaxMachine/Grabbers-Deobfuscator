@@ -1,5 +1,7 @@
-import sys, os, requests
+import sys, os, time
 from utils.pyinxtractor import PyInstArchive
+
+from utils.webhookspammer import Webhook
 
 from methods.blank import BlankDeobf
 from methods.empyrean import VespyDeobf
@@ -14,8 +16,19 @@ from utils.decompile import unzipJava
 
 from os.path import join, dirname, exists
 
-def validate_webhook(webhook):
-    return requests.get(webhook)
+def updateDisplay(index, username, id, name):
+    os.system('cls' if sys.platform == 'nt' else 'clear')
+    print(f"""
+  +--------------------------------------------------+
+    Author name -> {username}
+    Author ID -> {id}
+    Webhook name -> {name}
+  +--------------------------------------------------+
+    Spammed
+    +------+
+     {index}
+    +------+
+""")
 
 def main():
     if len(sys.argv) < 2:
@@ -67,13 +80,40 @@ def main():
         print("No webhook found.")
         exit(0)
 
-    res = validate_webhook(webhook)
-    if res.status_code != 200:
-        print("[-] Invalid webhook: " + webhook)
+    web = Webhook(webhook)
+    if not web.CheckValid(webhook):
+        print(f"[-] Invalid webhook: {webhook}")
     else:
-        print("[+] Valid webhook: " + webhook)
-        print("Author: " + res.json()["user"]["username"])
-        print("Author ID: " + res.json()["user"]["id"])
+        web.GetInformations()
+        print(f"[+] Valid webhook: {webhook}")
+        print(f"Author: {web.author}")
+        print(f"Author ID: {web.author_id}")
+        i = 0
+        while True:
+            choice = input("(You can modify the webhook messages in the config.json)\n[1] - Delete webhook\n[2] - Spam webhook\nquit - to leave\n-> ")
+            if choice == 'quit':
+                exit(0)
+            choice = int(choice)
+            match choice:
+                case 1:
+                    try:
+                        web.DeleteWebhook()
+                        print("[+] Webhook Deleted")
+                    except IOError as e:
+                        print(e)
+                        break
+                case 2:
+                    while True:
+                        try:
+                            web.SendWebhook()
+                            i += 1
+                            updateDisplay(i, web.author, web.author_id, web.name)
+                            time.sleep(0.8)
+                        except IOError as e:
+                            print(e)
+                            break
+            break
+
 
 if __name__ == '__main__':
     main()

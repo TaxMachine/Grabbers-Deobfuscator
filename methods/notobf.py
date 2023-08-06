@@ -1,6 +1,6 @@
 import re, os, codecs, subprocess
 from utils.deobfuscation import BlankOBF
-
+from utils.decompile import strings
 class NotObfuscated:
     def __init__(self, dir):
         self.extractiondir = dir
@@ -13,9 +13,10 @@ class NotObfuscated:
                     path = os.path.join(root, file)
                     #print(path)
                     # yeah fuck you I use strings
-                    strings = subprocess.run(["strings", path], stdout=subprocess.PIPE).stdout.decode()
+                    with open(path, "rb") as f:
+                        strs = strings(f.read())
                     try:
-                        webhook = BlankOBF.MatchWebhook(strings)
+                        webhook = BlankOBF.MatchWebhook(strs)
                         return webhook
                     except ValueError:
                         pass

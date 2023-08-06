@@ -1,6 +1,6 @@
-import os, re, subprocess
+import os
 from utils.deobfuscation import BlankOBF
-
+from utils.decompile import strings
 class BenDeobf:
     def __init__(self, dir):
         self.dir = dir
@@ -10,9 +10,10 @@ class BenDeobf:
             for file in files:
                 if file.endswith(".class"):
                     path = os.path.join(root, file)
-                    strings = subprocess.run(["strings", path], stdout=subprocess.PIPE).stdout.decode()
+                    with open(path, "rb") as f:
+                        strs = strings(f.read())
                     try:
-                        webhook = BlankOBF.MatchWebhook(strings)
+                        webhook = BlankOBF.MatchWebhook(strs)
                         return webhook
                     except ValueError:
                         pass

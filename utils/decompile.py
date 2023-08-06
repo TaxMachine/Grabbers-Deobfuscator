@@ -1,4 +1,4 @@
-import subprocess, sys, zipfile
+import subprocess, sys, zipfile, re
 from os import path, makedirs
 
 PYCDC = "pycdc.exe" if sys.platform == 'nt' else "pycdc"
@@ -22,3 +22,9 @@ def unzipJava(filename):
     with zipfile.ZipFile(filename) as f:
         f.extractall(outdir)
     return outdir
+
+def strings(bytestring):
+    matches = re.findall(r"([^\0]+)\0", bytestring.decode(errors="ignore"))
+    if matches:
+        return "".join(matches)
+    else: return ""
