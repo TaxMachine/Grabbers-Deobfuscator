@@ -56,8 +56,10 @@ class TheifcatDeobf:
 
         bytecode = dis.Bytecode(serialized).dis()
         
-        for i in range(4, 202):
-            bytecode = self.DecompressBytecodeX(bytecode)
-            
-        webhook = BlankOBF.MatchWebhook(bytecode)
-        return webhook
+        while True:
+            try:
+                bytecode = self.DecompressBytecodeX(bytecode)
+                webhook = BlankOBF.MatchWebhook(bytecode)
+                if webhook: return webhook
+            except Exception:
+                pass
