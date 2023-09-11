@@ -1,5 +1,6 @@
-import sys, os, time
-from utils.pyinxtractor import PyInstArchive
+import sys, os, time, argparse
+from utils.pyinstxtractor import PyInstArchive
+from utils.pyinstxtractorng import PyInstArchive as PyInstArchiveNG
 
 from utils.webhookspammer import Webhook
 
@@ -13,11 +14,12 @@ from methods.ben import BenDeobf
 
 from utils.detection import Detection
 from utils.decompile import unzipJava
+from utils.download import DownloadFile
 
 from os.path import join, dirname, exists
 
 def updateDisplay(index, username, id, name):
-    os.system('cls' if sys.platform == 'nt' else 'clear')
+    os.system('clear' if sys.platform == 'nt' else 'cls')
     print(f"""
   +--------------------------------------------------+
     Author name -> {username}
@@ -31,29 +33,49 @@ def updateDisplay(index, username, id, name):
 """)
 
 def main():
-    if len(sys.argv) < 2:
-        print("usage: deobf.py [file.exe]")
-        exit(0)
+    argparser = argparse.ArgumentParser(
+        description="Grabbers Deobfuscator\nPls star https://github.com/TaxMachine/Grabbers-Deobfuscator", 
+        epilog="Made by TaxMachine"
+    )
+    argparser.add_argument(
+        "filename", 
+        help="File to deobfuscate"
+    )
+    argparser.add_argument(
+        "-d", "--download", 
+        help="Download the file from a link", 
+        action="store_true"
+    )
+    args = argparser.parse_args()
+    if args.download:
+        print("[+] Downloading file")
+        filename = DownloadFile(args.filename)
+        print("[+] File downloaded")
+    else: filename = args.filename
     webhook = ""
     if not (exists(join(dirname(__file__), "temp"))): os.makedirs(join(dirname(__file__), "temp"))
-    if sys.argv[1].endswith(".jar"):
-        dir = unzipJava(sys.argv[1])
+    if filename.endswith(".jar"):
+        dir = unzipJava(filename)
         if Detection.BenGrabberDetect(dir):
             print("[+] Ben grabber detected")
             ben = BenDeobf(dir)
             webhook = ben.Deobfuscate()
     else:
-        arch = PyInstArchive(sys.argv[1])
-        if arch.open():
-            if arch.checkFile():
-                if arch.getCArchiveInfo():
-                    arch.parseTOC()
-                    arch.extractFiles()
-                    arch.close()
-                    print('[+] Successfully extracted pyinstaller archive: {0}'.format(sys.argv[1]))
-            else:
-                arch.close()
-                exit(0)
+        arch = None
+        try:
+            arch = PyInstArchiveNG(filename)
+            if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
+                arch.parseTOC()
+                arch.extractFiles()
+                print('[+] Successfully extracted pyinstaller archive: {0}'.format(filename))
+        except Exception:
+            arch = PyInstArchive(filename)
+            if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
+                arch.parseTOC()
+                arch.extractFiles()
+                print(f"[+] Successfully extracted pyinstaller archive: {filename}")
+        entries = arch.entrypoints
+        arch.close()
         extractiondir = join(os.getcwd())
         if Detection.BlankGrabberDetect(extractiondir):
             print("[+] Blank Stealer detected")
@@ -69,16 +91,16 @@ def main():
             webhook = luna.Deobfuscate()
         elif Detection.ThiefcatDetect(extractiondir):
             print("[+] Thiefcat Stealer Detected")
-            cat = TheifcatDeobf(extractiondir)
+            cat = TheifcatDeobf(extractiondir, entries)
             webhook = cat.Deobfuscate()
         else:
             print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
             notobf = NotObfuscated(extractiondir)
             webhook = notobf.GetWebhook()
     
-    if webhook == "" or webhook == None:
+    if webhook == "" or webhook is None:
         print("No webhook found.")
-        exit(0)
+        sys.exit(0)
 
     web = Webhook(webhook)
     if not web.CheckValid(webhook):
@@ -112,7 +134,6 @@ def main():
                         except IOError as e:
                             print(e)
                             break
-            break
 
 
 if __name__ == '__main__':

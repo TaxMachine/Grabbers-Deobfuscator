@@ -1,5 +1,5 @@
 """
-PyInstaller Extractor v2.0 (Supports pyinstaller 5.8.0, 5.7.0, 5.6.2, 5.6.1, 5.6, 5.5, 5.4.1, 5.4, 5.3, 5.2, 5.1, 5.0.1, 5.0, 4.10, 4.9, 4.8, 4.7, 4.6, 4.5.1, 4.5, 4.4, 4.3, 4.2, 4.1, 4.0, 3.6, 3.5, 3.4, 3.3, 3.2, 3.1, 3.0, 2.1, 2.0)
+PyInstaller Extractor v2.0 (Supports pyinstaller 5.13.0, 5.12.0, 5.11.0, 5.10.1, 5.10.0, 5.9.0, 5.8.0, 5.7.0, 5.6.2, 5.6.1, 5.6, 5.5, 5.4.1, 5.4, 5.3, 5.2, 5.1, 5.0.1, 5.0, 4.10, 4.9, 4.8, 4.7, 4.6, 4.5.1, 4.5, 4.4, 4.3, 4.2, 4.1, 4.0, 3.6, 3.5, 3.4, 3.3, 3.2, 3.1, 3.0, 2.1, 2.0)
 Author : Extreme Coders
 E-mail : extremecoders(at)hotmail(dot)com
 Web    : https://0xec.blogspot.com
@@ -111,6 +111,7 @@ class PyInstArchive:
         self.filePath = path
         self.pycMagic = b'\0' * 4
         self.barePycList = [] # List of pyc's whose headers have to be fixed
+        self.entrypoints = []
 
 
     def open(self):
@@ -231,7 +232,17 @@ class PyInstArchive:
                 '!IIIBc{0}s'.format(entrySize - nameLen), \
                 self.fPtr.read(entrySize - 4))
 
-            name = name.decode('utf-8').rstrip('\0')
+            try:
+                name = name.decode("utf-8").rstrip("\0")
+            except UnicodeDecodeError:
+                newName = str(uniquename())
+                print('[!] Warning: File name {0} contains invalid bytes. Using random name {1}'.format(name, newName))
+                name = newName
+            
+            # Prevent writing outside the extraction directory
+            if name.startswith("/"):
+                name = name.lstrip("/")
+
             if len(name) == 0:
                 name = str(uniquename())
                 print('[!] Warning: Found an unamed file in CArchive. Using random name {0}'.format(name))
@@ -261,10 +272,11 @@ class PyInstArchive:
 
 
     def extractFiles(self):
-        extractionDir = os.path.join(os.path.dirname(__file__), "..", 'temp', os.path.basename(self.filePath) + '_extracted')
+        print('[+] Beginning extraction...please standby')
+        extractionDir = os.path.join(os.getcwd(), os.path.basename(self.filePath) + '_extracted')
 
         if not os.path.exists(extractionDir):
-            os.mkdir(extractionDir)
+            os.makedirs(extractionDir)
 
         os.chdir(extractionDir)
 
@@ -273,7 +285,11 @@ class PyInstArchive:
             data = self.fPtr.read(entry.cmprsdDataSize)
 
             if entry.cmprsFlag == 1:
-                data = zlib.decompress(data)
+                try:
+                    data = zlib.decompress(data)
+                except zlib.error:
+                    print('[!] Error : Failed to decompress {0}'.format(entry.name))
+                    continue
                 # Malware may tamper with the uncompressed size
                 # Comment out the assertion in such a case
                 assert len(data) == entry.uncmprsdDataSize # Sanity Check
@@ -293,7 +309,8 @@ class PyInstArchive:
             if entry.typeCmprsData == b's':
                 # s -> ARCHIVE_ITEM_PYSOURCE
                 # Entry point are expected to be python scripts
-
+                #print('[+] Possible entry point: {0}.pyc'.format(entry.name))
+                self.entrypoints.append(entry.name + ".pyc")
                 if self.pycMagic == b'\0' * 4:
                     # if we don't have the pyc header yet, fix them in a later pass
                     self.barePycList.append(entry.name + '.pyc')
@@ -357,7 +374,7 @@ class PyInstArchive:
         dirName =  name + '_extracted'
         # Create a directory for the contents of the pyz
         if not os.path.exists(dirName):
-            os.makedirs(dirName)
+            os.mkdir(dirName)
 
         with open(name, 'rb') as f:
             pyzMagic = f.read(4)
@@ -387,6 +404,8 @@ class PyInstArchive:
             except:
                 print('[!] Unmarshalling FAILED. Cannot extract {0}. Extracting remaining files.'.format(name))
                 return
+
+            print('[+] Found {0} files in PYZ archive'.format(len(toc)))
 
             # From pyinstaller 3.1+ toc is a list of tuples
             if type(toc) == list:
@@ -420,6 +439,7 @@ class PyInstArchive:
                     data = f.read(length)
                     data = zlib.decompress(data)
                 except:
+                    print('[!] Error: Failed to decompress {0}, probably encrypted. Extracting as is.'.format(filePath))
                     open(filePath + '.encrypted', 'wb').write(data)
                 else:
                     self._writePyc(filePath, data)

@@ -2,12 +2,13 @@
 import re, base64, marshal, zlib, dis, bz2, lzma, gzip
 from os import path, walk
 from os.path import join
-from utils.decompile import decompilePyc, strings
+from utils.decompile import disassemblePyc, strings
 from utils.deobfuscation import MatchWebhook
 
 class TheifcatDeobf:
-    def __init__(self, dir):
+    def __init__(self, dir, entries):
         self.extractiondir = dir
+        self.entries = entries
         self.tempdir = path.join(self.extractiondir, "..", "..", "temp")
 
     def DecompressBytecodeX(self, bytecode):
@@ -40,17 +41,16 @@ class TheifcatDeobf:
                 return zlib
 
     def Deobfuscate(self):
-        entrypoint = ""
-        for root, subdirs, files in walk(self.extractiondir):
-            for file in files:
-                if file.endswith(".pyc"):
-                    path = join(root, file)
-                    with open(path, "rb") as f:
-                        strs = strings(f.read())
-                    if "CryptUnprotectData" in strs:
-                        entrypoint = path
-        code = decompilePyc(entrypoint)
+        for i in self.entries:
+            if not 'pyi' in i: entrypoint = i
+        code = disassemblePyc(entrypoint)
+        f = open("thiefcat_entry.py.asm", "w")
+        f.write(code)
+        f.close()
         bytestr = re.search(r"exec\(marshal.loads\(binascii.a2b_base64\(b'(.*)'\)\)\)", code)
+        if bytestr is None:
+            webhook = MatchWebhook(code)
+            return webhook
         b64 = bytestr.group(1).encode().decode("unicode_escape", "ignore").encode("iso-8859-1")
         decoded = base64.b64decode(b64)
         serialized = marshal.loads(decoded)

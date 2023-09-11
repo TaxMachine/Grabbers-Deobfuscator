@@ -1,4 +1,4 @@
-import subprocess, sys, zipfile, re
+import subprocess, sys, zipfile, re, dis
 from os import path, makedirs
 
 PYCDC = "pycdc.exe" if sys.platform == 'win32' else "pycdc"
@@ -12,7 +12,7 @@ def decompilePyc(filename):
 
 def disassemblePyc(filename):
     res = subprocess.run([path.join(dir, "bin", PYCDAS), filename], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-    return res.stdout.decode()
+    return res.stdout.decode()    
 
 def unzipJava(filename):
     if not filename.endswith(".jar"):
