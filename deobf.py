@@ -114,7 +114,7 @@ def main():
         while True:
             choice = input("(You can modify the webhook messages in the config.json)\n[1] - Delete webhook\n[2] - Spam webhook\nquit - to leave\n-> ")
             if choice == 'quit':
-                exit(0)
+                sys.exit(0)
             choice = int(choice)
             match choice:
                 case 1:
@@ -123,7 +123,7 @@ def main():
                         print("[+] Webhook Deleted")
                     except IOError as e:
                         print(e)
-                        break
+                    break
                 case 2:
                     while True:
                         try:
