@@ -3,3 +3,4 @@ requests~=2.31.0
 pycryptodome
 beautifulsoup4~=4.12.2
 lxml
+yara-python~=4.3.1

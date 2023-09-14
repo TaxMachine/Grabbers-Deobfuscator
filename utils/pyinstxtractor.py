@@ -110,9 +110,8 @@ class PyInstArchive:
     def __init__(self, path):
         self.filePath = path
         self.pycMagic = b'\0' * 4
-        self.barePycList = [] # List of pyc's whose headers have to be fixed
+        self.barePycList = []
         self.entrypoints = []
-
 
     def open(self):
         try:
@@ -123,13 +122,11 @@ class PyInstArchive:
             return False
         return True
 
-
     def close(self):
         try:
             self.fPtr.close()
         except:
             pass
-
 
     def checkFile(self):
         print('[+] Processing {0}'.format(self.filePath))
@@ -178,7 +175,6 @@ class PyInstArchive:
 
         return True
 
-
     def getCArchiveInfo(self):
         try:
             if self.pyinstVer == 20:
@@ -213,7 +209,6 @@ class PyInstArchive:
 
         print('[+] Length of package: {0} bytes'.format(lengthofPackage))
         return True
-
 
     def parseTOC(self):
         # Go to the table of contents
@@ -260,7 +255,6 @@ class PyInstArchive:
             parsedLen += entrySize
         print('[+] Found {0} files in CArchive'.format(len(self.tocList)))
 
-
     def _writeRawData(self, filepath, data):
         nm = filepath.replace('\\', os.path.sep).replace('/', os.path.sep).replace('..', '__')
         nmDir = os.path.dirname(nm)
@@ -269,7 +263,6 @@ class PyInstArchive:
 
         with open(nm, 'wb') as f:
             f.write(data)
-
 
     def extractFiles(self):
         print('[+] Beginning extraction...please standby')
@@ -346,13 +339,11 @@ class PyInstArchive:
         # Fix bare pyc's if any
         self._fixBarePycs()
 
-
     def _fixBarePycs(self):
         for pycFile in self.barePycList:
             with open(pycFile, 'r+b') as pycFile:
                 # Overwrite the first four bytes
                 pycFile.write(self.pycMagic)
-
 
     def _writePyc(self, filename, data):
         with open(filename, 'wb') as pycFile:
@@ -368,7 +359,6 @@ class PyInstArchive:
                     pycFile.write(b'\0' * 4)  # Size parameter added in Python 3.3
 
             pycFile.write(data)
-
 
     def _extractPyz(self, name):
         dirName =  name + '_extracted'

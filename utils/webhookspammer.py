@@ -1,8 +1,16 @@
-import requests, json, time
 from os.path import exists, join, dirname
 
-class Webhook():
+import json
+import requests
+import time
+
+
+class Webhook:
     def __init__(self, webhook):
+        self.name = None
+        self.author_id = None
+        self.author = None
+        self.config = None
         self.webhook = webhook
         if not exists(join(dirname(__file__), "..", "config.json")):
             f = open(join(dirname(__file__), "..", "config.json"))
@@ -12,7 +20,8 @@ class Webhook():
                 },
                 "spammessage": {
                     "content": "lmao nerd you thought :nerd:"
-                }
+                },
+                "deleteafterdeobf": True
             }, indent=4))
             f.close()
         self.getConfig()
@@ -22,7 +31,8 @@ class Webhook():
         self.config = json.loads(f.read())
         f.close()
 
-    def CheckValid(self, webhook):
+    @staticmethod
+    def CheckValid(webhook):
         r = requests.get(webhook)
         return r.status_code == 200
 
@@ -43,12 +53,19 @@ class Webhook():
             case 404:
                 print("[-] Webhook got deleted")
                 quit(0)
-        
 
     def GetInformations(self):
-        if not self.CheckValid(self.webhook): raise IOError("Invalid token")
+        if not self.CheckValid(self.webhook):
+            raise IOError("Invalid token")
         r = requests.get(self.webhook)
         payload = r.json()
         self.author = payload["user"]["username"]
         self.author_id = payload["user"]["id"]
         self.name = payload["name"]
+
+    @staticmethod
+    def GetDeleteConfig():
+        f = open(join(dirname(__file__), "..", "config.json"))
+        config = json.loads(f.read())
+        f.close()
+        return config["deleteafterdeobf"]

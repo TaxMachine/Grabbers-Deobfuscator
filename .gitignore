@@ -3,3 +3,4 @@ temp/
 !pycdas.exe
 __pycache__/
 grabber/
+*_extracted

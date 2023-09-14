@@ -1,22 +1,22 @@
-import sys, os, time, argparse
-from utils.pyinstxtractor import PyInstArchive
-from utils.pyinstxtractorng import PyInstArchive as PyInstArchiveNG
+import argparse
+import os
+import shutil
+import sys
+import time
+from os.path import join, dirname, exists
 
-from utils.webhookspammer import Webhook
-
+from methods.ben import BenDeobf
 from methods.blank import BlankDeobf
 from methods.empyrean import VespyDeobf
 from methods.luna import LunaDeobf
-from methods.thiefcat import TheifcatDeobf
 from methods.notobf import NotObfuscated
-
-from methods.ben import BenDeobf
-
-from utils.detection import Detection
+from methods.thiefcat import TheifcatDeobf
 from utils.decompile import unzipJava
+from utils.detection import Detection
 from utils.download import TryDownload
-
-from os.path import join, dirname, exists
+from utils.pyinstxtractor import PyInstArchive
+from utils.pyinstxtractorng import PyInstArchive as PyInstArchiveNG
+from utils.webhookspammer import Webhook
 
 
 def updateDisplay(index: int, username: str, userid: str, name: str):
@@ -57,10 +57,10 @@ def main():
     webhook = ""
     if not (exists(join(dirname(__file__), "temp"))):
         os.makedirs(join(dirname(__file__), "temp"))
-    if filename.endswith(".jar"):
-        javadir = unzipJava(filename)
-        if Detection.BenGrabberDetect(javadir):
+    if ".jar" in filename:
+        if Detection.BenGrabberDetect(filename):
             print("[+] Ben grabber detected")
+            javadir = unzipJava(filename)
             ben = BenDeobf(javadir)
             webhook = ben.Deobfuscate()
     else:
@@ -80,7 +80,7 @@ def main():
         entries = arch.entrypoints
         arch.close()
         extractiondir = join(os.getcwd())
-        if Detection.BlankGrabberDetect(extractiondir):
+        if Detection.BlankGrabberDetect(filename):
             print("[+] Blank Stealer detected")
             blank = BlankDeobf(extractiondir)
             webhook = blank.Deobfuscate()
@@ -144,3 +144,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    if Webhook.GetDeleteConfig():
+        shutil.rmtree(join(dirname(__file__), "temp"))

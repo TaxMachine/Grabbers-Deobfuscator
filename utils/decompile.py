@@ -15,7 +15,7 @@ def disassemblePyc(filename):
     return res.stdout.decode()    
 
 def unzipJava(filename):
-    if not filename.endswith(".jar"):
+    if ".jar" not in filename:
         raise ValueError("Not a jar file")
     outdir = path.join(dir, "..", "temp", filename.split(path.sep)[len(filename.split(path.sep)) - 1].split(".")[0])
     if not path.exists(outdir): makedirs(outdir)
