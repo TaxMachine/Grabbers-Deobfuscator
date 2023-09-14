@@ -14,16 +14,17 @@ from methods.ben import BenDeobf
 
 from utils.detection import Detection
 from utils.decompile import unzipJava
-from utils.download import DownloadFile
+from utils.download import TryDownload
 
 from os.path import join, dirname, exists
 
-def updateDisplay(index, username, id, name):
+
+def updateDisplay(index: int, username: str, userid: str, name: str):
     os.system('clear' if sys.platform == 'nt' else 'cls')
     print(f"""
   +--------------------------------------------------+
     Author name -> {username}
-    Author ID -> {id}
+    Author ID -> {userid}
     Webhook name -> {name}
   +--------------------------------------------------+
     Spammed
@@ -31,6 +32,7 @@ def updateDisplay(index, username, id, name):
      {index}
     +------+
 """)
+
 
 def main():
     argparser = argparse.ArgumentParser(
@@ -49,16 +51,17 @@ def main():
     args = argparser.parse_args()
     if args.download:
         print("[+] Downloading file")
-        filename = DownloadFile(args.filename)
+        filename = TryDownload(args.filename)
         print("[+] File downloaded")
     else: filename = args.filename
     webhook = ""
-    if not (exists(join(dirname(__file__), "temp"))): os.makedirs(join(dirname(__file__), "temp"))
+    if not (exists(join(dirname(__file__), "temp"))):
+        os.makedirs(join(dirname(__file__), "temp"))
     if filename.endswith(".jar"):
-        dir = unzipJava(filename)
-        if Detection.BenGrabberDetect(dir):
+        javadir = unzipJava(filename)
+        if Detection.BenGrabberDetect(javadir):
             print("[+] Ben grabber detected")
-            ben = BenDeobf(dir)
+            ben = BenDeobf(javadir)
             webhook = ben.Deobfuscate()
     else:
         arch = None
@@ -112,7 +115,10 @@ def main():
         print(f"Author ID: {web.author_id}")
         i = 0
         while True:
-            choice = input("(You can modify the webhook messages in the config.json)\n[1] - Delete webhook\n[2] - Spam webhook\nquit - to leave\n-> ")
+            choice = input(
+                "(You can modify the webhook messages in the config.json)\n[1] - Delete webhook\n[2] - "
+                "Spam webhook\nquit - to leave\n-> "
+            )
             if choice == 'quit':
                 sys.exit(0)
             choice = int(choice)

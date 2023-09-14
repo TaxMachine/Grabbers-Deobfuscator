@@ -1,3 +1,5 @@
 xdis==5.0.13
-requests
+requests~=2.31.0
 pycryptodome
+beautifulsoup4~=4.12.2
+lxml

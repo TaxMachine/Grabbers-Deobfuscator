@@ -4,11 +4,12 @@ from utils.decompile import disassemblePyc
 
 
 class Detection:
-    def BlankObfDetect(dir):
+    @staticmethod
+    def BlankObfDetect(decompdir):
         try:
             ## Very shitty but it works ig
-            file = dir.split(".exe")[0].split(sep)[len(dir.split(sep)) - 1] + ".pyc"
-            assembly = disassemblePyc(dir + sep + file)
+            file = decompdir.split(".exe")[0].split(sep)[-1] + ".pyc"
+            assembly = disassemblePyc(decompdir + sep + file)
             keywordstuffidk = [
                 "'eval'",
                 "'getattr'",
@@ -32,15 +33,19 @@ class Detection:
         except Exception:
             pass
         return False
-            
-    def BlankGrabberDetect(dir):
-        return exists(join(dir, "loader-o.pyc"))
-    
-    def EmpyreanDetect(dir):
-        return exists(join(dir, "PYZ-00.pyz_extracted", "config.pyc"))
-    
-    def BenGrabberDetect(dir):
-        return exists(join(dir, "net", "jodah", "typetools"))
-    
-    def ThiefcatDetect(dir):
-        return exists(join(dir, "PYZ-00.pyz_extracted", "configparser.pyc")) and exists(join(dir, "PYZ-00.pyz_extracted", "gzip.pyc")) and exists(join(dir, "PYZ-00.pyz_extracted", "lzma.pyc"))
+
+    @staticmethod
+    def BlankGrabberDetect(decompdir):
+        return exists(join(decompdir, "loader-o.pyc"))
+
+    @staticmethod
+    def EmpyreanDetect(decompdir):
+        return exists(join(decompdir, "PYZ-00.pyz_extracted", "config.pyc"))
+
+    @staticmethod
+    def BenGrabberDetect(decompdir):
+        return exists(join(decompdir, "net", "jodah", "typetools"))
+
+    @staticmethod
+    def ThiefcatDetect(decompdir):
+        return exists(join(decompdir, "PYZ-00.pyz_extracted", "configparser.pyc")) and exists(join(decompdir, "PYZ-00.pyz_extracted", "gzip.pyc")) and exists(join(decompdir, "PYZ-00.pyz_extracted", "lzma.pyc"))

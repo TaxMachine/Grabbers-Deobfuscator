@@ -36,7 +36,7 @@ def pycHeader2Magic(header):
 
 class CTOCEntry:
     def __init__(
-        self, position, cmprsdDataSize, uncmprsdDataSize, cmprsFlag, typeCmprsData, name
+            self, position, cmprsdDataSize, uncmprsdDataSize, cmprsFlag, typeCmprsData, name
     ):
         self.position = position
         self.cmprsdDataSize = cmprsdDataSize
@@ -52,6 +52,18 @@ class PyInstArchive:
     MAGIC = b"MEI\014\013\012\013\016"  # Magic number which identifies pyinstaller
 
     def __init__(self, path):
+        self.cookiePos = None
+        self.tableOfContentsSize = None
+        self.tableOfContentsPos = None
+        self.overlayPos = None
+        self.overlaySize = None
+        self.pymin = None
+        self.pymaj = None
+        self.pyinstVer = None
+        self.fileSize = None
+        self.fPtr = None
+        self.tocList = None
+
         self.filePath = path
         self.pycMagic = b"\0" * 4
         self.barePycList = []  # List of pyc's whose headers have to be fixed
@@ -124,6 +136,7 @@ class PyInstArchive:
         return True
 
     def getCArchiveInfo(self):
+        global pyver, lengthofPackage, tocLen, toc
         try:
             if self.pyinstVer == 20:
                 self.fPtr.seek(self.cookiePos, os.SEEK_SET)
@@ -152,13 +165,13 @@ class PyInstArchive:
 
         # Additional data after the cookie
         tailBytes = (
-            self.fileSize
-            - self.cookiePos
-            - (
-                self.PYINST20_COOKIE_SIZE
-                if self.pyinstVer == 20
-                else self.PYINST21_COOKIE_SIZE
-            )
+                self.fileSize
+                - self.cookiePos
+                - (
+                    self.PYINST20_COOKIE_SIZE
+                    if self.pyinstVer == 20
+                    else self.PYINST21_COOKIE_SIZE
+                )
         )
 
         # Overlay is the data appended at the end of the PE
@@ -234,14 +247,14 @@ class PyInstArchive:
         )
         nmDir = os.path.dirname(nm)
         if nmDir != "" and not os.path.exists(
-            nmDir
+                nmDir
         ):  # Check if path exists, create if not
             os.makedirs(nmDir)
 
         with open(nm, "wb") as f:
             f.write(data)
 
-    def extractFiles(self, one_dir):
+    def extractFiles(self, one_dir=False):
         print("[+] Beginning extraction...please standby")
         extractionDir = os.path.join(
             os.getcwd(), os.path.basename(self.filePath) + "_extracted"
@@ -277,7 +290,7 @@ class PyInstArchive:
             if entry.typeCmprsData == b"s":
                 # s -> ARCHIVE_ITEM_PYSOURCE
                 # Entry point are expected to be python scripts
-                #print("[+] Possible entry point: {0}.pyc".format(entry.name))
+                # print("[+] Possible entry point: {0}.pyc".format(entry.name))
                 self.entrypoints.append(entry.name + ".pyc")
                 if self.pycMagic == b"\0" * 4:
                     # if we don't have the pyc header yet, fix them in a later pass
@@ -392,7 +405,7 @@ class PyInstArchive:
             return cipher.decrypt(ct[CRYPT_BLOCK_SIZE:])
 
     def _extractPyz(self, name, one_dir):
-        if one_dir == True:
+        if one_dir:
             dirName = "."
         else:
             dirName = name + "_extracted"
