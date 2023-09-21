@@ -223,8 +223,8 @@ class PyInstArchive:
             nameLen = struct.calcsize('!iIIIBc')
 
             (entryPos, cmprsdDataSize, uncmprsdDataSize, cmprsFlag, typeCmprsData, name) = \
-            struct.unpack( \
-                '!IIIBc{0}s'.format(entrySize - nameLen), \
+            struct.unpack(
+                '!IIIBc{0}s'.format(entrySize - nameLen),
                 self.fPtr.read(entrySize - 4))
 
             try:
@@ -242,14 +242,14 @@ class PyInstArchive:
                 name = str(uniquename())
                 print('[!] Warning: Found an unamed file in CArchive. Using random name {0}'.format(name))
 
-            self.tocList.append( \
-                                CTOCEntry(                      \
-                                    self.overlayPos + entryPos, \
-                                    cmprsdDataSize,             \
-                                    uncmprsdDataSize,           \
-                                    cmprsFlag,                  \
-                                    typeCmprsData,              \
-                                    name                        \
+            self.tocList.append(
+                CTOCEntry(
+                                    self.overlayPos + entryPos,
+                                    cmprsdDataSize,
+                                    uncmprsdDataSize,
+                                    cmprsFlag,
+                                    typeCmprsData,
+                                    name
                                 ))
 
             parsedLen += entrySize

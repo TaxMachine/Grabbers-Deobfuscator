@@ -19,10 +19,10 @@ class Stage3:
 
 
 class BlankOBF:
-    def DeobfuscateStage3(assembly):
-        bytestr = re.search(r"b'(\\xfd7zXZ\\x00\\x00.*?YZ)'", assembly).group(1)
-        stage3 = bytestr.encode().decode("unicode_escape", "ignore").encode("iso-8859-1")
-        decompressed = lzma.decompress(stage3)
+    @staticmethod
+    def DeobfuscateStage3(assembly: bytes):
+        bytestr = b"\xfd7zXZ\x00\x00" + assembly.split(b"\xfd7zXZ\x00\x00")[1]
+        decompressed = lzma.decompress(bytestr)
         sanitized = decompressed.decode().replace(";", "\n")
         sanitized = re.sub(r"^__import__.*", "", sanitized, flags=re.M)
         return Stage3(
@@ -31,8 +31,9 @@ class BlankOBF:
             re.search(r'^______="(.*)"$', sanitized, re.MULTILINE).group(1),
             re.search(r'^_______="(.*)"$', sanitized, re.MULTILINE).group(1)
         )
-    
-    def DeobfuscateStage4(firstpart, secondpart, thirdpart, fourthpart):
+
+    @staticmethod
+    def DeobfuscateStage4(firstpart: str, secondpart: str, thirdpart: str, fourthpart: str):
         pythonbytes = b""
         try:
             unrot = codecs.decode(firstpart, "rot13")

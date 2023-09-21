@@ -53,7 +53,9 @@ def main():
         print("[+] Downloading file")
         filename = TryDownload(args.filename)
         print("[+] File downloaded")
-    else: filename = args.filename
+    else:
+        filename = args.filename
+    filename = os.path.abspath(filename)
     webhook = ""
     if not (exists(join(dirname(__file__), "temp"))):
         os.makedirs(join(dirname(__file__), "temp"))
@@ -66,13 +68,13 @@ def main():
     else:
         arch = None
         try:
-            arch = PyInstArchiveNG(filename)
+            arch = PyInstArchive(filename)
             if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
                 arch.parseTOC()
                 arch.extractFiles()
                 print('[+] Successfully extracted pyinstaller archive: {0}'.format(filename))
         except Exception:
-            arch = PyInstArchive(filename)
+            arch = PyInstArchiveNG(filename)
             if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
                 arch.parseTOC()
                 arch.extractFiles()

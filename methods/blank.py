@@ -1,4 +1,6 @@
-import base64, os, zlib, zipfile, re, base64, io
+import base64, os, zlib, zipfile, re, base64, io, dis
+import marshal
+
 from utils.pyaes import AESModeOfOperationGCM
 from utils.decompile import decompilePyc, disassemblePyc
 from utils.deobfuscation import BlankOBF
@@ -17,17 +19,29 @@ class BlankDeobf:
 
     @staticmethod
     def getKeysFromPycFile(filename):
-        code = decompilePyc(filename)
-        key = re.search(r"key = base64\.b64decode\('(.*?)'", code).group(1)
-        iv = re.search(r"iv = base64\.b64decode\('(.*?)'", code).group(1)
+        f = open(filename, "rb")
+        data = f.read()
+        f.close()
+        data = data.split(b"stub-oz,")[-1].split(b"\x63\x03")[0].split(b"\x10")
+        key = base64.b64decode(data[0].split(b"\xDA")[0].decode())
+        iv = base64.b64decode(data[-1].decode())
         return AuthTag(
-            base64.b64decode(key.encode()),
-            base64.b64decode(iv.encode())
+            key,
+            iv
         )
 
     def Deobfuscate(self):
+        filename = None
         try:
-            authtags = BlankDeobf.getKeysFromPycFile(os.path.join(self.extractiondir, "loader-o.pyc"))
+            if os.path.exists(os.path.join(self.extractiondir, "loader-o.pyc")):
+                filename = "loader-o.pyc"
+            else:
+                for files in os.listdir(self.extractiondir):
+                    if re.match(r"([a-f0-9]{8}-[a-f0-9]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[a-f0-9]{12}\.pyc)", files):
+                        filename = files
+                    if filename:
+                        break
+            authtags = BlankDeobf.getKeysFromPycFile(os.path.join(self.extractiondir, filename))
             print("payload key: " + str(authtags.key))
             print("payload iv: " + str(authtags.iv))
             if len(authtags.key) != 32:
@@ -49,7 +63,9 @@ class BlankDeobf:
         except zipfile.BadZipFile as e:
             print(e)
 
-        assembly = disassemblePyc(os.path.join(self.extractiondir, "stub-o.pyc"))
+        file = open(os.path.join(self.extractiondir, "stub-o.pyc"), "rb")
+        assembly = file.read()
+        file.close()
         stage3 = BlankOBF.DeobfuscateStage3(assembly)
         webhook = BlankOBF.DeobfuscateStage4(stage3.first, stage3.second, stage3.third, stage3.fourth)
         return webhook
