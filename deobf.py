@@ -147,16 +147,16 @@ def main():
             print(f"Username: {web.username}")
             print(f"First Name: {web.firstName}")
             print(f"Can dump messages?: {web.dump}")
-
-            index = 0
-            while True:
-                try:
-                    #web.SendMessage(chat_id)
-                    index += 1
-                    updateDisplayTelegram(index, web)
-                except IOError as e:
-                    print(e)
-                    break
+            print("[-] Spamming not yet implemented")
+            # index = 0
+            # while True:
+            #     try:
+            #         #web.SendMessage(chat_id)
+            #         index += 1
+            #         updateDisplayTelegram(index, web)
+            #     except IOError as e:
+            #         print(e)
+            #         break
 
 
 if __name__ == '__main__':
@@ -164,4 +164,3 @@ if __name__ == '__main__':
     main()
     if Webhook.GetDeleteConfig():
         shutil.rmtree(join(dirname(__file__), "temp"))
-    #tele = Telegram("6317592216:AAFAvF8v7av1GQren778ZY5p40eWHs0IOsE")
