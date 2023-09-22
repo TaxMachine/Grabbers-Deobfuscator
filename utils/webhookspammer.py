@@ -4,32 +4,16 @@ import json
 import requests
 import time
 
+from utils.config import Config
+
 
 class Webhook:
     def __init__(self, webhook):
         self.name = None
         self.author_id = None
         self.author = None
-        self.config = None
+        self.config = Config.getConfig()
         self.webhook = webhook
-        if not exists(join(dirname(__file__), "..", "config.json")):
-            f = open(join(dirname(__file__), "..", "config.json"))
-            f.write(json.dumps({
-                "deletemessage": {
-                    "content": ":clown: Webhook deleted fucking skid"
-                },
-                "spammessage": {
-                    "content": "lmao nerd you thought :nerd:"
-                },
-                "deleteafterdeobf": True
-            }, indent=4))
-            f.close()
-        self.getConfig()
-
-    def getConfig(self):
-        f = open(join(dirname(__file__), "..", "config.json"))
-        self.config = json.loads(f.read())
-        f.close()
 
     @staticmethod
     def CheckValid(webhook):
