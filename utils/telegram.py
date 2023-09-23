@@ -23,9 +23,8 @@ class Telegram:
             "text": self.config["telegram_message"]
         }
         r = requests.post(f"https://api.telegram.org/bot{self.token}/message", params=payload)
-        match r.status_code:
-            case 404:
-                print("[-] Telegram bot got deleted")
+        if not r.json()["ok"]:
+            print(r.json()["description"])
 
     def GetInformations(self):
         if not self.CheckValid(self.token):

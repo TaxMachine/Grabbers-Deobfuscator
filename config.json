@@ -27,5 +27,6 @@
             }
         ]
     },
-    "deleteafterdeobf": true
+    "deleteafterdeobf": false,
+    "telegram_message": "test"
 }

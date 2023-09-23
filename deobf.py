@@ -42,6 +42,9 @@ def main():
         filename = TryDownload(args.filename)
         print("[+] File downloaded")
     else:
+        if not os.path.exists(args.filename):
+            print("[-] This file does not exist")
+            exit(0)
         filename = args.filename
     filename = os.path.abspath(filename)
     webhook = ""
@@ -113,8 +116,10 @@ def main():
             i = 0
             while True:
                 choice = input(
-                    "(You can modify the webhook messages in the config.json)\n[1] - Delete webhook\n[2] - "
-                    "Spam webhook\nquit - to leave\n-> "
+                    "(You can modify the webhook messages in the config.json)\n" +
+                    "[1] - Delete webhook\n" +
+                    "[2] - Spam webhook\n" +
+                    "quit - to leave\n-> "
                 )
                 if choice == 'quit':
                     sys.exit(0)
@@ -143,11 +148,13 @@ def main():
         if not Telegram.CheckValid(webhook):
             print("[-] Invalid Telegram bot token")
         else:
+            web.GetInformations()
             print("[+] Valid Telegram bot found")
             print(f"Username: {web.username}")
             print(f"First Name: {web.firstName}")
             print(f"Can dump messages?: {web.dump}")
             print("[-] Spamming not yet implemented")
+            # I need to test telegram, but I forgot my telegram password 💀
             # index = 0
             # while True:
             #     try:

@@ -13,7 +13,7 @@ def MatchWebhook(string):
     elif webhook:
         return webhook.group(1)
     elif telegramtokenb64:
-        encoded = telegramtoken.group(1) + "="
+        encoded = telegramtokenb64.group(1) + "="
         decoded = base64.b64decode(encoded).decode()
         return decoded
     elif telegramtoken:
