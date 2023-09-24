@@ -4,3 +4,5 @@ temp/
 __pycache__/
 grabber/
 *_extracted
+deobf.*/
+out/

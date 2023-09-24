@@ -16,6 +16,7 @@ from utils.decompile import unzipJava
 from utils.detection import Detection
 from utils.download import TryDownload
 from utils.pyinstaller.pyinstaller import ExtractPYInstaller
+from utils.pyinstaller.pyinstallerExceptions import ExtractionError
 from utils.webhookspammer import Webhook
 from utils.telegram import Telegram
 from utils.config import Config
@@ -74,9 +75,14 @@ def main():
         webhook = ben.Deobfuscate()
         JSON_EXPORT["type"] = "java grabber"
     else:
-        archive = ExtractPYInstaller(filename)
-        JSON_EXPORT["pyinstaller_version"] = archive.pyinstVer
-        JSON_EXPORT["python_version"] = "{0}.{1}".format(archive.pymaj, archive.pymin)
+        try:
+            archive = ExtractPYInstaller(filename)
+            JSON_EXPORT["pyinstaller_version"] = archive.pyinstVer
+            JSON_EXPORT["python_version"] = "{0}.{1}".format(archive.pymaj, archive.pymin)
+        except ExtractionError as e:
+            print(e)
+            exit(0)
+
         extractiondir = join(os.getcwd())
         try:
             if Detection.BlankGrabberDetect(filename):
