@@ -42,12 +42,12 @@ class BlankDeobf:
                     if filename:
                         break
             authtags = BlankDeobf.getKeysFromPycFile(os.path.join(self.extractiondir, filename))
-            print("payload key: " + str(authtags.key))
-            print("payload iv: " + str(authtags.iv))
+            # print("payload key: " + str(authtags.key))
+            # print("payload iv: " + str(authtags.iv))
             if len(authtags.key) != 32:
-                print("Key length is invalid")
+                raise ValueError("Key length is invalid")
             if len(authtags.iv) != 12:
-                print("IV length is invalid")
+                raise ValueError("IV length is invalid")
 
             encryptedfile = open(os.path.join(self.extractiondir, "blank.aes"), "rb").read()
             try:

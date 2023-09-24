@@ -26,8 +26,9 @@ class TheifcatDeobf:
             serialized = marshal.loads(decompressed)
             bytecodenext = dis.Bytecode(serialized).dis()
         return bytecodenext
-    
-    def DetectCompression(self, bytecode):
+
+    @staticmethod
+    def DetectCompression(bytecode):
         match = re.search(r"70 LOAD_NAME                [0-9]{1,2} \((.*)\)", bytecode)
         res = match.group(1)
         match res:
@@ -41,8 +42,10 @@ class TheifcatDeobf:
                 return zlib
 
     def Deobfuscate(self):
+        entrypoint = None
         for i in self.entries:
-            if not 'pyi' in i: entrypoint = i
+            if 'pyi' not in i:
+                entrypoint = i
         code = disassemblePyc(entrypoint)
         f = open("thiefcat_entry.py.asm", "w")
         f.write(code)
@@ -61,6 +64,7 @@ class TheifcatDeobf:
             try:
                 bytecode = self.DecompressBytecodeX(bytecode)
                 webhook = MatchWebhook(bytecode)
-                if webhook: return webhook
+                if webhook:
+                    return webhook
             except Exception:
                 pass

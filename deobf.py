@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import shutil
 import sys
@@ -14,36 +15,52 @@ from methods.thiefcat import TheifcatDeobf
 from utils.decompile import unzipJava
 from utils.detection import Detection
 from utils.download import TryDownload
-from utils.pyinstxtractor import PyInstArchive
-from utils.pyinstxtractorng import PyInstArchive as PyInstArchiveNG
+from utils.pyinstaller.pyinstaller import ExtractPYInstaller
 from utils.webhookspammer import Webhook
 from utils.telegram import Telegram
 from utils.config import Config
-from utils.display import updateDisplayDiscord, updateDisplayTelegram
+from utils.display import updateDisplayDiscord
+
+argparser = argparse.ArgumentParser(
+        description="Grabbers Deobfuscator\nPls star https://github.com/TaxMachine/Grabbers-Deobfuscator",
+        epilog="Made by TaxMachine"
+    )
+argparser.add_argument(
+    "filename",
+    help="File to deobfuscate"
+)
+argparser.add_argument(
+    "-d", "--download",
+    help="Download the file from a link",
+    action="store_true"
+)
+argparser.add_argument(
+    "-j", "--json",
+    help="output details in a json format",
+    action="store_true"
+)
+args = argparser.parse_args()
+
+
+def ifprint(message):
+    if not args.json:
+        print(message)
 
 
 def main():
-    argparser = argparse.ArgumentParser(
-        description="Grabbers Deobfuscator\nPls star https://github.com/TaxMachine/Grabbers-Deobfuscator", 
-        epilog="Made by TaxMachine"
-    )
-    argparser.add_argument(
-        "filename", 
-        help="File to deobfuscate"
-    )
-    argparser.add_argument(
-        "-d", "--download", 
-        help="Download the file from a link", 
-        action="store_true"
-    )
-    args = argparser.parse_args()
+    JSON_EXPORT = {
+        "type": None,
+        "webhook": None,
+        "pyinstaller_version": 0,
+        "python_version": 0
+    }
     if args.download:
-        print("[+] Downloading file")
+        ifprint("[+] Downloading file")
         filename = TryDownload(args.filename)
-        print("[+] File downloaded")
+        ifprint("[+] File downloaded")
     else:
         if not os.path.exists(args.filename):
-            print("[-] This file does not exist")
+            ifprint("[-] This file does not exist")
             exit(0)
         filename = args.filename
     filename = os.path.abspath(filename)
@@ -51,68 +68,62 @@ def main():
     if not (exists(join(dirname(__file__), "temp"))):
         os.makedirs(join(dirname(__file__), "temp"))
     if ".jar" in filename:
-        if Detection.BenGrabberDetect(filename):
-            print("[+] Ben grabber detected")
-            javadir = unzipJava(filename)
-            ben = BenDeobf(javadir)
-            webhook = ben.Deobfuscate()
+        ifprint("[+] Java grabber suspected, scanning strings...")
+        javadir = unzipJava(filename)
+        ben = BenDeobf(javadir)
+        webhook = ben.Deobfuscate()
+        JSON_EXPORT["type"] = "java grabber"
     else:
-        arch = None
-        try:
-            arch = PyInstArchive(filename)
-            if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
-                arch.parseTOC()
-                arch.extractFiles()
-                print('[+] Successfully extracted pyinstaller archive: {0}'.format(filename))
-        except Exception:
-            arch = PyInstArchiveNG(filename)
-            if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
-                arch.parseTOC()
-                arch.extractFiles()
-                print(f"[+] Successfully extracted pyinstaller archive: {filename}")
-        entries = arch.entrypoints
-        arch.close()
+        archive = ExtractPYInstaller(filename)
+        JSON_EXPORT["pyinstaller_version"] = archive.pyinstVer
+        JSON_EXPORT["python_version"] = "{0}.{1}".format(archive.pymaj, archive.pymin)
         extractiondir = join(os.getcwd())
-        webhook = None
         try:
             if Detection.BlankGrabberDetect(filename):
-                print("[+] Blank Stealer detected")
+                ifprint("[+] Blank Stealer detected")
                 blank = BlankDeobf(extractiondir)
                 webhook = blank.Deobfuscate()
+                JSON_EXPORT["type"] = "Blank Stealer"
             elif Detection.EmpyreanDetect(extractiondir):
-                print("[+] Empyrean/Vespy Grabber detected")
+                ifprint("[+] Empyrean/Vespy Grabber detected")
                 vespy = VespyDeobf(extractiondir)
                 webhook = vespy.Deobfuscate()
+                JSON_EXPORT["type"] = "Empyrean Stealer"
             elif Detection.BlankObfDetect(extractiondir):
-                print("[+] Blank Obfuscation detected: possibly luna grabber")
+                ifprint("[+] Blank Obfuscation detected: possibly luna grabber")
                 luna = LunaDeobf(extractiondir)
                 webhook = luna.Deobfuscate()
+                JSON_EXPORT["type"] = "Blank Obfuscator"
             elif Detection.ThiefcatDetect(extractiondir):
-                print("[+] Thiefcat Stealer Detected")
-                cat = TheifcatDeobf(extractiondir, entries)
+                ifprint("[+] Thiefcat Stealer Detected")
+                cat = TheifcatDeobf(extractiondir, archive.entrypoints)
                 webhook = cat.Deobfuscate()
+                JSON_EXPORT["type"] = "Thiefcat"
             else:
-                print("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
+                ifprint("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
                 notobf = NotObfuscated(extractiondir)
                 webhook = notobf.GetWebhook()
+                JSON_EXPORT["type"] = "Unknown"
         except ValueError as e:
-            print(e)
-            print("[-] No webhook found")
+            ifprint(e)
+            ifprint("[-] No webhook found")
             exit(0)
     
     if webhook == "" or webhook is None:
-        print("[-] No webhook found.")
+        ifprint("[-] No webhook found.")
         sys.exit(0)
+
+    JSON_EXPORT["webhook"] = webhook
 
     if "discord" in webhook:
         web = Webhook(webhook)
         if not web.CheckValid(webhook):
-            print(f"[-] Invalid webhook: {webhook}")
+            ifprint(f"[-] Invalid webhook: {webhook}")
         else:
             web.GetInformations()
-            print(f"[+] Valid webhook: {webhook}")
-            print(f"Author: {web.author}")
-            print(f"Author ID: {web.author_id}")
+            ifprint(f"[+] Valid webhook: {webhook}")
+            ifprint(f"Author: {web.author}")
+            ifprint(f"Author ID: {web.author_id}")
             i = 0
             while True:
                 choice = input(
@@ -128,9 +139,9 @@ def main():
                     case 1:
                         try:
                             web.DeleteWebhook()
-                            print("[+] Webhook Deleted")
+                            ifprint("[+] Webhook Deleted")
                         except IOError as e:
-                            print(e)
+                            ifprint(e)
                         break
                     case 2:
                         while True:
@@ -140,20 +151,21 @@ def main():
                                 updateDisplayDiscord(i, web)
                                 time.sleep(0.8)
                             except IOError as e:
-                                print(e)
+                                ifprint(e)
                                 break
     else:
         webhook, chat_id = webhook.split('$')
         web = Telegram(webhook)
         if not Telegram.CheckValid(webhook):
-            print("[-] Invalid Telegram bot token")
+            ifprint("[-] Invalid Telegram bot token")
         else:
             web.GetInformations()
-            print("[+] Valid Telegram bot found")
-            print(f"Username: {web.username}")
-            print(f"First Name: {web.firstName}")
-            print(f"Can dump messages?: {web.dump}")
-            print("[-] Spamming not yet implemented")
+            ifprint("[+] Valid Telegram bot found")
+            ifprint(f"Token: {web.token}")
+            ifprint(f"Username: {web.username}")
+            ifprint(f"First Name: {web.firstName}")
+            ifprint(f"Can dump messages?: {web.dump}")
+            ifprint("[-] Spamming not yet implemented")
             # I need to test telegram, but I forgot my telegram password 💀
             # index = 0
             # while True:
@@ -164,6 +176,8 @@ def main():
             #     except IOError as e:
             #         print(e)
             #         break
+    if args.json:
+        print(json.dumps(JSON_EXPORT))
 
 
 if __name__ == '__main__':
