@@ -52,8 +52,8 @@ def main():
     JSON_EXPORT = {
         "type": None,
         "webhook": None,
-        "pyinstaller_version": 0,
-        "python_version": 0
+        "pyinstaller_version": "0",
+        "python_version": "0"
     }
     if args.download:
         ifprint("[+] Downloading file")
@@ -62,7 +62,7 @@ def main():
     else:
         if not os.path.exists(args.filename):
             ifprint("[-] This file does not exist")
-            exit(0)
+            exit(1)
         filename = args.filename
     filename = os.path.abspath(filename)
     webhook = ""
@@ -77,11 +77,11 @@ def main():
     else:
         try:
             archive = ExtractPYInstaller(filename)
-            JSON_EXPORT["pyinstaller_version"] = archive.pyinstVer
+            JSON_EXPORT["pyinstaller_version"] = str(archive.pyinstVer)
             JSON_EXPORT["python_version"] = "{0}.{1}".format(archive.pymaj, archive.pymin)
         except ExtractionError as e:
-            print(e)
-            exit(0)
+            ifprint(e)
+            exit(1)
 
         extractiondir = join(os.getcwd())
         try:
@@ -113,13 +113,16 @@ def main():
         except ValueError as e:
             ifprint(e)
             ifprint("[-] No webhook found")
-            exit(0)
+            exit(1)
     
     if webhook == "" or webhook is None:
         ifprint("[-] No webhook found.")
-        sys.exit(0)
+        sys.exit(1)
 
     JSON_EXPORT["webhook"] = webhook
+    if args.json:
+        print(json.dumps(JSON_EXPORT))
+        exit(0)
 
     if "discord" in webhook:
         web = Webhook(webhook)
@@ -182,8 +185,6 @@ def main():
             #     except IOError as e:
             #         print(e)
             #         break
-    if args.json:
-        print(json.dumps(JSON_EXPORT))
 
 
 if __name__ == '__main__':
