@@ -9,7 +9,7 @@ def MatchWebhook(string):
     telegramtokenb64 = re.search(r"L([a-zA-Z0-9]+SQ[a-zA-Z0-9]+)xz", string)
     telegramtoken = re.search(r"([0-9]{10}:[a-zA-Z0-9]{35})", string)
     if webhookb64:
-        return base64.b64decode(webhookb64.group(2)).decode()
+        return base64.b64decode(webhookb64.group(1)).decode()
     elif webhook:
         return webhook.group(1)
     elif telegramtokenb64:

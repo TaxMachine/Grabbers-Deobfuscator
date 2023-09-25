@@ -1,12 +1,14 @@
 import os
 from utils.deobfuscation import MatchWebhook
 from utils.decompile import strings
+
+
 class BenDeobf:
     def __init__(self, dir):
         self.dir = dir
-        
+
     def Deobfuscate(self):
-       for root, subdirs, files in os.walk(self.dir):
+        for root, _, files in os.walk(self.dir):
             for file in files:
                 if file.endswith(".class"):
                     path = os.path.join(root, file)
