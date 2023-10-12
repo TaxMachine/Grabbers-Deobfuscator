@@ -85,7 +85,7 @@ def main():
 
         extractiondir = join(os.getcwd())
         try:
-            if Detection.BlankGrabberDetect(filename):
+            if Detection.BlankGrabberDetect(extractiondir):
                 ifprint("[+] Blank Stealer detected")
                 blank = BlankDeobf(extractiondir)
                 webhook = blank.Deobfuscate()

@@ -6,7 +6,7 @@ import re, lzma, codecs, base64, os
 def MatchWebhook(string):
     webhookb64 = re.search(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
     webhook = re.search(r"(https://(.*?)discord.com/api/webhooks/[0-9]{19}/[a-zA-Z0-9\-_]{68})", string)
-    telegramtokenb64 = re.search(r"L([a-zA-Z0-9]+SQ[a-zA-Z0-9]+)xz", string)
+    telegramtokenb64 = re.search(r"zT([a-zA-Z0-9]+==)z", string)
     telegramtoken = re.search(r"([0-9]{10}:[a-zA-Z0-9]{35})", string)
     if webhookb64:
         return base64.b64decode(webhookb64.group(1)).decode()
