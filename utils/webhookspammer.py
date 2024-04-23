@@ -10,8 +10,6 @@ from utils.config import Config
 class Webhook:
     def __init__(self, webhook):
         self.name = None
-        self.author_id = None
-        self.author = None
         self.config = Config.getConfig()
         self.webhook = webhook
 
@@ -43,8 +41,6 @@ class Webhook:
             raise IOError("Invalid token")
         r = requests.get(self.webhook)
         payload = r.json()
-        self.author = payload["user"]["username"]
-        self.author_id = payload["user"]["id"]
         self.name = payload["name"]
 
     @staticmethod

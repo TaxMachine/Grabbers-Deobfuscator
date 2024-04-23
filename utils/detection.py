@@ -43,8 +43,8 @@ class Detection:
         return False
 
     @staticmethod
-    def BlankGrabberDetect(exe: str) -> bool:
-        return BlankRule.match(exe)
+    def BlankGrabberDetect(decompdir: str) -> bool:
+        return exists(join(decompdir, "blank.aes"))
 
     @staticmethod
     def EmpyreanDetect(decompdir: str) -> bool:
