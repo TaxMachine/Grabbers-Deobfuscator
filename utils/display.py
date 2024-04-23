@@ -8,8 +8,6 @@ def updateDisplayDiscord(index: int, discord: Webhook):
     os.system('clear' if sys.platform == 'nt' else 'cls')
     print(f"""
   +--------------------------------------------------+
-    Author name -> {discord.name}
-    Author ID -> {discord.author}
     Webhook name -> {discord.name}
   +--------------------------------------------------+
     Spammed
