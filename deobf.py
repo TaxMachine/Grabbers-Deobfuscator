@@ -110,10 +110,16 @@ def main():
                 notobf = NotObfuscated(extractiondir)
                 webhook = notobf.GetWebhook()
                 JSON_EXPORT["type"] = "Unknown"
-        except ValueError as e:
-            ifprint(e)
-            ifprint("[-] No webhook found")
-            exit(1)
+        except ValueError:
+            try:
+                ifprint("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
+                notobf = NotObfuscated(extractiondir)
+                webhook = notobf.GetWebhook()
+                JSON_EXPORT["type"] = "Unknown"
+            except ValueError as e:
+                ifprint(e)
+                ifprint("[-] No webhook found")
+                exit(1)
     
     if webhook == "" or webhook is None:
         ifprint("[-] No webhook found.")

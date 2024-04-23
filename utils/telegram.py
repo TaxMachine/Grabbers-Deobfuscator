@@ -19,10 +19,13 @@ class Telegram:
 
     def SendMessage(self, chat_id: str):
         payload = {
-            "chat_id": chat_id,
+            "chat_id": "@" + chat_id,
             "text": self.config["telegram_message"]
         }
-        r = requests.post(f"https://api.telegram.org/bot{self.token}/message", params=payload)
+        r = requests.post(
+            f"https://api.telegram.org/bot{self.token}/message",
+            json=payload,
+            headers={"Content-Type": "application/json"})
         if not r.json()["ok"]:
             print(r.json()["description"])
 
