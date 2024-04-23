@@ -137,8 +137,6 @@ def main():
         else:
             web.GetInformations()
             ifprint(f"[+] Valid webhook: {webhook}")
-            ifprint(f"Author: {web.author}")
-            ifprint(f"Author ID: {web.author_id}")
             i = 0
             while True:
                 choice = input(
