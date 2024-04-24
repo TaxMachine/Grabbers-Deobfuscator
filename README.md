@@ -46,3 +46,9 @@ if you wish to add a grabber to the methods, Dm me on Discord: `taxmachine` (lin
 ## Issues
 
 If you encounter an issue, before creating one on github, please read this. Provide as much informations as possible (stacktraces, with what you used it). If its because your grabber is unsupported, submit your sample in my Discord dms
+
+## Credits
+
+- [PyInstxtractor](https://github.com/extremecoders-re/pyinstxtractor) for the pyinstaller archive extractor
+- [PyInstxtractor-ng](https://github.com/extremecoders-re/pyinstxtractor) for the encrypted pyinstaller archive extractor
+- [pycdc](https://github.com/zrax/pycdc) for the python bytecode disassembler

@@ -6,3 +6,4 @@ grabber/
 *_extracted
 deobf.*/
 out/
+.idea/
