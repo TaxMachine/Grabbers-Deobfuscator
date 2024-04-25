@@ -112,7 +112,10 @@ class PyInstArchive:
         self.filePath = path
         self.pycMagic = b'\0' * 4
         self.barePycList = [] # List of pyc's whose headers have to be fixed
-
+        self.entrypoints = []
+        self.pyinstVer = None
+        self.pymaj = None
+        self.pymin = None
 
     def open(self):
         try:
@@ -120,7 +123,6 @@ class PyInstArchive:
             self.fileSize = os.stat(self.filePath).st_size
         except:
             ExtractionError('[!] Error: Could not open {0}'.format(self.filePath))
-            return False
         return True
 
 
@@ -163,7 +165,6 @@ class PyInstArchive:
 
         if self.cookiePos == -1:
             ExtractionError('[!] Error : Missing cookie, unsupported pyinstaller version or not a pyinstaller archive')
-            return False
 
         self.fPtr.seek(self.cookiePos + self.PYINST20_COOKIE_SIZE, os.SEEK_SET)
 
@@ -308,6 +309,7 @@ class PyInstArchive:
                 # s -> ARCHIVE_ITEM_PYSOURCE
                 # Entry point are expected to be python scripts
                 #print('[+] Possible entry point: {0}.pyc'.format(entry.name))
+                self.entrypoints.append(entry.name + ".pyc")
 
                 if self.pycMagic == b'\0' * 4:
                     # if we don't have the pyc header yet, fix them in a later pass

@@ -47,9 +47,6 @@ class TheifcatDeobf:
             if 'pyi' not in i:
                 entrypoint = i
         code = disassemblePyc(entrypoint)
-        f = open("thiefcat_entry.py.asm", "w")
-        f.write(code)
-        f.close()
         bytestr = re.search(r"exec\(marshal.loads\(binascii.a2b_base64\(b'(.*)'\)\)\)", code)
         if bytestr is None:
             webhook = MatchWebhook(code)

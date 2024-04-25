@@ -53,11 +53,15 @@ class PyInstArchive:
     MAGIC = b"MEI\014\013\012\013\016"  # Magic number which identifies pyinstaller
 
     def __init__(self, path):
+        self.pymin = None
+        self.pymaj = None
+        self.pyinstVer = None
         self.filePath = path
         self.pycMagic = b"\0" * 4
         self.barePycList = []  # List of pyc's whose headers have to be fixed
         self.cryptoKey = None
         self.cryptoKeyFileData = None
+        self.entrypoints = []
 
     def open(self):
         try:
@@ -275,6 +279,7 @@ class PyInstArchive:
                 # s -> ARCHIVE_ITEM_PYSOURCE
                 # Entry point are expected to be python scripts
                 #print("[+] Possible entry point: {0}.pyc".format(entry.name))
+                self.entrypoints.append(entry.name + ".pyc")
 
                 if self.pycMagic == b"\0" * 4:
                     # if we don't have the pyc header yet, fix them in a later pass
