@@ -37,6 +37,8 @@ if you wish to add a grabber to the methods, Dm me on Discord: `taxmachine` (lin
 - [x] Blank (python)
 - [x] Vespy (python)
 - [x] Luna (python)
+- [x] Red Tiger (python)
+- [x] Vare obfuscation (Potna stealer?) (python)
 - [x] All the random python grabbers with no obfuscation
 - [x] W4SP (python)
 - [x] Thiefcat (python)

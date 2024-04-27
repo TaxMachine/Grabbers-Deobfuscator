@@ -3,9 +3,19 @@ from os import path, makedirs
 
 PYCDC = "pycdc.exe" if sys.platform == 'win32' else "pycdc"
 PYCDAS = "pycdas.exe" if sys.platform == 'win32' else "pycdas"
+UPX = "upx.exe" if sys.platform == 'win32' else "upx"
 
 dir = path.join(path.dirname(__file__))
 
+def checkUPX(filename):
+    res = subprocess.run([path.join(dir, "bin", UPX), "-l", filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if "not packed" not in res.stderr.decode():
+        res = subprocess.run([path.join(dir, "bin", UPX), "-d", filename], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        if "Unpacked" in res.stdout.decode():
+            return True
+        else:
+            print("[!] UPX was detected but failed to decompress")
+    return False
 
 def decompilePyc(filename):
     res = subprocess.run([path.join(dir, "bin", PYCDC), filename], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)

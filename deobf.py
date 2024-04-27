@@ -12,7 +12,7 @@ from methods.empyrean import VespyDeobf
 from methods.luna import LunaDeobf
 from methods.notobf import NotObfuscated
 from methods.other import OtherDeobf
-from utils.decompile import unzipJava
+from utils.decompile import unzipJava, checkUPX
 from utils.detection import Detection
 from utils.download import TryDownload
 from utils.pyinstaller.pyinstaller import ExtractPYInstaller
@@ -75,6 +75,8 @@ def main():
         webhook = ben.Deobfuscate()
         JSON_EXPORT["type"] = "java grabber"
     else:
+        if checkUPX(filename):
+            print("[!] File packed with UPX")
         try:
             archive = ExtractPYInstaller(filename)
             JSON_EXPORT["pyinstaller_version"] = str(archive.pyinstVer)
