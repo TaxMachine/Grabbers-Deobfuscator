@@ -55,7 +55,7 @@ class Detection:
         return BenRule.match(jar)
 
     @staticmethod
-    def ThiefcatDetect(decompdir: str) -> bool:
+    def OthersDetect(decompdir: str) -> bool:
         return exists(join(decompdir, "PYZ-00.pyz_extracted", "configparser.pyc")) and exists(
             join(decompdir, "PYZ-00.pyz_extracted", "gzip.pyc")) and exists(
             join(decompdir, "PYZ-00.pyz_extracted", "lzma.pyc"))

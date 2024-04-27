@@ -11,7 +11,7 @@ from methods.blank import BlankDeobf
 from methods.empyrean import VespyDeobf
 from methods.luna import LunaDeobf
 from methods.notobf import NotObfuscated
-from methods.thiefcat import TheifcatDeobf
+from methods.other import OtherDeobf
 from utils.decompile import unzipJava
 from utils.detection import Detection
 from utils.download import TryDownload
@@ -100,11 +100,11 @@ def main():
                 luna = LunaDeobf(extractiondir)
                 webhook = luna.Deobfuscate()
                 JSON_EXPORT["type"] = "Blank Obfuscator"
-            elif Detection.ThiefcatDetect(extractiondir):
-                ifprint("[+] Thiefcat Stealer Detected")
-                cat = TheifcatDeobf(extractiondir, archive.entrypoints)
+            elif Detection.OthersDetect(extractiondir):
+                ifprint("[+] Unknown Stealer Detected")
+                cat = OtherDeobf(extractiondir, archive.entrypoints)
                 webhook = cat.Deobfuscate()
-                JSON_EXPORT["type"] = "Thiefcat"
+                JSON_EXPORT["type"] = "Unknown"
             else:
                 ifprint("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
                 notobf = NotObfuscated(extractiondir)
@@ -129,8 +129,15 @@ def main():
     if args.json:
         print(json.dumps(JSON_EXPORT))
         exit(0)
-
-    if "discord" in webhook:
+    if type(webhook) != str:
+        ifprint(f"[+] Found multiple webhooks")
+        for web in webhook:
+            webh = Webhook(web)
+            if webh.CheckValid(web):
+                ifprint(f"[+] Valid webhook: {web}")
+            else:
+                ifprint(f"[-] Invalid webhook: {web}")
+    elif type(webhook) == str and "discord" in webhook:
         web = Webhook(webhook)
         if not web.CheckValid(webhook):
             ifprint(f"[-] Invalid webhook: {webhook}")

@@ -4,8 +4,9 @@ from os import path, walk
 from os.path import join
 from utils.decompile import disassemblePyc, strings
 from utils.deobfuscation import MatchWebhook
+from cryptography.fernet import Fernet
 
-class TheifcatDeobf:
+class OtherDeobf:
     def __init__(self, dir, entries):
         self.extractiondir = dir
         self.entries = entries
@@ -40,6 +41,37 @@ class TheifcatDeobf:
                 return bz2
             case "zlib":
                 return zlib
+    
+    @staticmethod
+    def DeobfuscateVare(bytecode):
+        pattern = r"""        [0-9]{1,4}    LOAD_CONST                      [0-9]{1,4}: '(.*)'\r
+        [0-9]{1,4}    STORE_NAME                      [0-9]{1,4}: [\d\w]+\r
+        [0-9]{1,4}    BUILD_LIST                      [0-9]{1,4}\r
+        [0-9]{1,4}    LOAD_CONST                      [0-9]{1,4}: \('(.*)', '(.*)', '(.*)'\)"""
+
+        matches = re.search(pattern, bytecode, re.MULTILINE)
+        key = matches.group(1)
+        first = matches.group(2)
+        second = matches.group(3)
+        third = matches.group(4)
+
+        def decodearr(arr):
+            arr = arr[::-1]
+            result = []
+            for i in arr.split("|"):
+                result.append(chr(int(i)))
+            return ''.join(result)
+
+        f = Fernet(key)
+
+        first = decodearr(first)
+        second = decodearr(second)
+        third = decodearr(third)
+
+        decrypted = f.decrypt(bytes.fromhex(first + third + second))
+        decoded = base64.b64decode(decrypted)
+        decompressed = zlib.decompress(decoded)
+        return decompressed.decode(errors='ignore')
 
     def Deobfuscate(self):
         entrypoint = None
@@ -47,6 +79,10 @@ class TheifcatDeobf:
             if 'pyi' not in i:
                 entrypoint = i
         code = disassemblePyc(entrypoint)
+        if entrypoint == "Obfuscated.pyc":
+            content = self.DeobfuscateVare(code)
+            webhook = MatchWebhook(content)
+            return webhook
         bytestr = re.search(r"exec\(marshal.loads\(binascii.a2b_base64\(b'(.*)'\)\)\)", code)
         if bytestr is None:
             webhook = MatchWebhook(code)

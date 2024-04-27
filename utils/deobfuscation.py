@@ -4,14 +4,23 @@ import re, lzma, codecs, base64, os
 
 
 def MatchWebhook(string):
-    webhookb64 = re.search(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
-    webhook = re.search(r"(https://(.*?)discord.com/api/webhooks/[0-9]{19}/[a-zA-Z0-9\-_]{68})", string)
+    webhookb64 = re.findall(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
+    webhook = re.findall(r"(https://((ptb\.|canary\.|development\.)?)discord\.com/api/webhooks/[0-9]{19}/[a-zA-Z0-9\-_]{68})", string)
     telegramtokenb64 = re.search(r"zT([a-zA-Z0-9]+==)z", string)
     telegramtoken = re.search(r"([0-9]{10}:[a-zA-Z0-9]{35})", string)
     if webhookb64:
-        return base64.b64decode(webhookb64.group(1)).decode()
+        decoded = []
+        for w in webhookb64:
+            w = base64.b64decode(w[0]).decode()
+            if w not in decoded:
+                decoded.append(w)
+        return decoded if len(decoded) > 1 else decoded[0]
     elif webhook:
-        return webhook.group(1)
+        webhooks = []
+        for w in webhook:
+            if w[0] not in webhooks:
+                webhooks.append(w[0])
+        return webhooks if len(webhooks) > 1 else webhooks[0]
     elif telegramtokenb64:
         encoded = telegramtokenb64.group(1) + "="
         decoded = base64.b64decode(encoded).decode()
