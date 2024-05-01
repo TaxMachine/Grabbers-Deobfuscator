@@ -1,6 +1,6 @@
 import base64, os, subprocess, zlib, zipfile, re, lzma, codecs, base64
 from utils.decompile import decompilePyc, disassemblePyc
-from utils.deobfuscation import BlankOBF
+from utils.deobfuscation import BlankStage3, BlankStage4
 
 class LunaDeobf:
     def __init__(self, dir, entries):
@@ -13,6 +13,6 @@ class LunaDeobf:
         f = open(self.extractiondir + os.path.sep + file, "rb")
         assembly = f.read()
         f.close()
-        stage3 = BlankOBF.DeobfuscateStage3(assembly)
-        webhook = BlankOBF.DeobfuscateStage4(stage3.first, stage3.second, stage3.third, stage3.fourth)
+        stage3 = BlankStage3(assembly)
+        webhook = BlankStage4(stage3)
         return webhook

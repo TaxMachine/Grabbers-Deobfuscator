@@ -1,9 +1,7 @@
-import base64, os, zlib, zipfile, re, base64, io, dis
-import marshal
+import base64, os, zlib, zipfile, re, base64, io
 
 from utils.pyaes import AESModeOfOperationGCM
-from utils.decompile import decompilePyc, disassemblePyc
-from utils.deobfuscation import BlankOBF
+from utils.deobfuscation import BlankStage3, BlankStage4
 
 
 class AuthTag:
@@ -72,6 +70,6 @@ class BlankDeobf:
         file = open(os.path.join(self.extractiondir, stub), "rb")
         assembly = file.read()
         file.close()
-        stage3 = BlankOBF.DeobfuscateStage3(assembly)
-        webhook = BlankOBF.DeobfuscateStage4(stage3.first, stage3.second, stage3.third, stage3.fourth)
+        stage3 = BlankStage3(assembly)
+        webhook = BlankStage4(stage3)
         return webhook

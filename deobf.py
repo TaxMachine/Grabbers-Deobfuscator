@@ -89,7 +89,6 @@ def main():
             BlankDeobf,
             LunaDeobf,
             VespyDeobf,
-            LunaDeobf,
             OtherDeobf,
             NotObfuscated
         ]
