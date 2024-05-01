@@ -42,8 +42,6 @@ class BlankDeobf:
                     if filename:
                         break
             authtags = BlankDeobf.getKeysFromPycFile(os.path.join(self.extractiondir, filename))
-            print("payload key: " + str(authtags.key))
-            print("payload iv: " + str(authtags.iv))
             if len(authtags.key) != 32:
                 raise ValueError("Key length is invalid")
             if len(authtags.iv) != 12:

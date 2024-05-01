@@ -13,5 +13,5 @@ class LunaDeobf:
         assembly = f.read()
         f.close()
         stage3 = BlankOBF.DeobfuscateStage3(assembly)
-        webhook = BlankOBF.DeobfuscateStage4(stage3.first, stage3.second, stage3.third, stage3.fourth)        
+        webhook = BlankOBF.DeobfuscateStage4(stage3.first, stage3.second, stage3.third, stage3.fourth)
         return webhook

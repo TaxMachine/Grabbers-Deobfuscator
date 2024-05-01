@@ -6,7 +6,7 @@ class NotObfuscated:
         self.extractiondir = dir
         self.tempdir = os.path.join(self.extractiondir, "..", "..", "temp")
 
-    def GetWebhook(self):
+    def Deobfuscate(self):
         for root, _, files in os.walk(self.extractiondir):
             for file in files:
                 if file.endswith(".pyc"):

@@ -13,7 +13,6 @@ from methods.luna import LunaDeobf
 from methods.notobf import NotObfuscated
 from methods.other import OtherDeobf
 from utils.decompile import unzipJava, checkUPX
-from utils.detection import Detection
 from utils.download import TryDownload
 from utils.pyinstaller.pyinstaller import ExtractPYInstaller
 from utils.pyinstaller.pyinstallerExceptions import ExtractionError
@@ -86,42 +85,24 @@ def main():
             exit(1)
 
         extractiondir = join(os.getcwd())
-        try:
-            if Detection.BlankGrabberDetect(extractiondir):
-                ifprint("[+] Blank Stealer detected")
-                blank = BlankDeobf(extractiondir)
-                webhook = blank.Deobfuscate()
-                JSON_EXPORT["type"] = "Blank Stealer"
-            elif Detection.EmpyreanDetect(extractiondir):
-                ifprint("[+] Empyrean/Vespy Grabber detected")
-                vespy = VespyDeobf(extractiondir)
-                webhook = vespy.Deobfuscate()
-                JSON_EXPORT["type"] = "Empyrean Stealer"
-            elif Detection.BlankObfDetect(extractiondir):
-                ifprint("[+] Blank Obfuscation detected: possibly luna grabber")
-                luna = LunaDeobf(extractiondir)
-                webhook = luna.Deobfuscate()
-                JSON_EXPORT["type"] = "Blank Obfuscator"
-            elif Detection.OthersDetect(extractiondir):
-                ifprint("[+] Unknown Stealer Detected")
-                cat = OtherDeobf(extractiondir, archive.entrypoints)
-                webhook = cat.Deobfuscate()
-                JSON_EXPORT["type"] = "Unknown"
-            else:
-                ifprint("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
-                notobf = NotObfuscated(extractiondir)
-                webhook = notobf.GetWebhook()
-                JSON_EXPORT["type"] = "Unknown"
-        except ValueError:
+        obfuscators = [
+            BlankDeobf,
+            LunaDeobf,
+            VespyDeobf,
+            LunaDeobf,
+            OtherDeobf,
+            NotObfuscated
+        ]
+        for deobfuscator in obfuscators:
             try:
-                ifprint("[-] Obfuscation/Stealer not detected. Strings method will be used instead")
-                notobf = NotObfuscated(extractiondir)
-                webhook = notobf.GetWebhook()
-                JSON_EXPORT["type"] = "Unknown"
-            except ValueError as e:
-                ifprint(e)
-                ifprint("[-] No webhook found")
-                exit(1)
+                ifprint(f"[!] Trying {deobfuscator.__name__} method")
+                deobf = deobfuscator(extractiondir)
+                webhook = deobf.Deobfuscate()
+                if webhook:
+                    JSON_EXPORT["type"] = deobfuscator.__name__
+                    break
+            except:
+                continue
     
     if webhook == "" or webhook is None:
         ifprint("[-] No webhook found.")
