@@ -4,14 +4,14 @@ import re, lzma, codecs, base64, os
 
 
 def MatchWebhook(string):
-    webhookb64 = re.findall(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv.*==)", string)
+    webhookb64 = re.findall(r"(aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv[\d\w]+==)", string)
     webhook = re.findall(r"(https://((ptb\.|canary\.|development\.)?)discord\.com/api/webhooks/[0-9]{19}/[a-zA-Z0-9\-_]{68})", string)
     telegramtokenb64 = re.search(r"zT([a-zA-Z0-9]+==)z", string)
     telegramtoken = re.search(r"([0-9]{10}:[a-zA-Z0-9]{35})", string)
     if webhookb64:
         decoded = []
         for w in webhookb64:
-            w = base64.b64decode(w[0]).decode()
+            w = base64.b64decode(w).decode()
             if w not in decoded:
                 decoded.append(w)
         return decoded if len(decoded) > 1 else decoded[0]
