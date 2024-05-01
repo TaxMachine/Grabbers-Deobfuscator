@@ -13,8 +13,11 @@ class AuthTag:
 
 
 class BlankDeobf:
-    def __init__(self, blankdir):
+    def __init__(self, blankdir, entries):
         self.extractiondir = blankdir
+        for entry in entries:
+            if 'pyi' not in entry:
+                self.entry = entry
         self.tempdir = os.path.join(self.extractiondir, "..", "..", "temp")
 
     @staticmethod
@@ -32,7 +35,7 @@ class BlankDeobf:
 
     def Deobfuscate(self):
         stub = None
-        if not os.path.exists(os.path.join(self.extractiondir, "main-o.pyc")):
+        if not self.entry == "main-o.pyc" and not self.entry == "stub-o.pyc":
             stub = "stub-o.pyc"
             filename = None
             try:
@@ -64,7 +67,7 @@ class BlankDeobf:
             except zipfile.BadZipFile as e:
                 print(e)
         else:
-            stub = "main-o.pyc"
+            stub = self.entry
 
         file = open(os.path.join(self.extractiondir, stub), "rb")
         assembly = file.read()

@@ -12,7 +12,7 @@ def ExtractPYInstaller(filename: str) -> PyInstArchive | PyInstArchiveNG:
             arch.parseTOC()
             arch.extractFiles()
             # print('[+] Successfully extracted pyinstaller archive: {0}'.format(filename))
-    except Exception:
+    except:
         arch = PyInstArchiveNG(filename)
         if arch.open() and arch.checkFile() and arch.getCArchiveInfo():
             arch.parseTOC()

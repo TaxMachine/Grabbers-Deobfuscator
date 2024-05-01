@@ -1,8 +1,9 @@
 import os, sys, importlib.util
 
 class VespyDeobf:
-    def __init__(self, dir):
+    def __init__(self, dir, entries):
         self.extractiondir = dir
+        self.entries = entries
         self.tempdir = os.path.join(self.extractiondir, "..", "..", "temp")
 
     def Deobfuscate(self):

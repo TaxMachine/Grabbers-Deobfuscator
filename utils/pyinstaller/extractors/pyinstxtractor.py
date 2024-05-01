@@ -439,7 +439,7 @@ class PyInstArchive:
                     data = f.read(length)
                     data = zlib.decompress(data)
                 except:
-                    print('[!] Error: Failed to decompress {0}, probably encrypted. Extracting as is.'.format(filePath))
+                    #raise ExtractionError('[!] Error: Failed to decompress, probably encrypted.')
                     open(filePath + '.encrypted', 'wb').write(data)
                 else:
                     self._writePyc(filePath, data)

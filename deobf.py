@@ -96,7 +96,7 @@ def main():
         for deobfuscator in obfuscators:
             try:
                 ifprint(f"[!] Trying {deobfuscator.__name__} method")
-                deobf = deobfuscator(extractiondir)
+                deobf = deobfuscator(extractiondir, archive.entrypoints)
                 webhook = deobf.Deobfuscate()
                 if webhook:
                     JSON_EXPORT["type"] = deobfuscator.__name__

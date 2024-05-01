@@ -3,8 +3,9 @@ from utils.decompile import decompilePyc, disassemblePyc
 from utils.deobfuscation import BlankOBF
 
 class LunaDeobf:
-    def __init__(self, dir):
+    def __init__(self, dir, entries):
         self.extractiondir = dir
+        self.entries = entries
         self.tempdir = os.path.join(self.extractiondir, "..", "..", "temp")
 
     def Deobfuscate(self):
