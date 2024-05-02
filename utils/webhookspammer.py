@@ -1,4 +1,4 @@
-from os.path import exists, join, dirname
+from os.path import join, dirname
 
 import json
 import requests

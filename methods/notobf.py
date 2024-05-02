@@ -1,4 +1,4 @@
-import re, os, codecs, subprocess
+import os
 from utils.deobfuscation import MatchWebhook
 from utils.decompile import strings
 class NotObfuscated:

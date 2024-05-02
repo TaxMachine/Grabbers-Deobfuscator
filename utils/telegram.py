@@ -1,4 +1,3 @@
-import json
 import requests
 
 from utils.config import Config

@@ -1,5 +1,4 @@
-import base64, os, subprocess, zlib, zipfile, re, lzma, codecs, base64
-from utils.decompile import decompilePyc, disassemblePyc
+import os
 from utils.deobfuscation import BlankStage3, BlankStage4
 
 class LunaDeobf:
@@ -9,7 +8,9 @@ class LunaDeobf:
         self.tempdir = os.path.join(self.extractiondir, "..", "..", "temp")
 
     def Deobfuscate(self):
-        file = self.extractiondir.split(".exe")[0].split(os.path.sep)[len(self.extractiondir.split(os.path.sep)) - 1] + ".pyc"
+        for entry in self.entries:
+            if 'pyi' not in entry:
+                file = entry
         f = open(self.extractiondir + os.path.sep + file, "rb")
         assembly = f.read()
         f.close()

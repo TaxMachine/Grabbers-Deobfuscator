@@ -1,4 +1,4 @@
-import subprocess, sys, zipfile, re, dis
+import subprocess, sys, zipfile, re
 from os import path, makedirs
 
 PYCDC = "pycdc.exe" if sys.platform == 'win32' else "pycdc"

@@ -1,6 +1,4 @@
-import dis
-import marshal
-import re, lzma, codecs, base64, os
+import re, lzma, codecs, base64
 
 WEBHOOK_REGEX = r"(https://((ptb\.|canary\.|development\.)?)discord(app)?\.com/api/webhooks/[0-9]{19}/[a-zA-Z0-9\-_]{68})"
 WEBHOOK_REGEX_BASE64 = r"(aHR0cHM6Ly9[\d\w]+==)"
@@ -61,9 +59,9 @@ def BlankStage4(stage3Obj: BlankStage3Obj):
         unrot = codecs.decode(stage3Obj.first, "rot13")
         pythonbytes = base64.b64decode(unrot + stage3Obj.second + stage3Obj.third[::-1] + stage3Obj.fourth)
         # this is just for testing, you can uncomment it if you want to see the deobfuscated binary object
-        #f = open("dump.bin", "wb")
-        #f.write(pythonbytes)
-        #f.close()
+        f = open("dump.bin", "wb")
+        f.write(pythonbytes)
+        f.close()
     except Exception as e:
         print(e)
         raise Exception(e)

@@ -1,8 +1,7 @@
 # Thank you to meisr cuz yes
 import re, base64, marshal, zlib, dis, bz2, lzma, gzip
-from os import path, walk
-from os.path import join
-from utils.decompile import disassemblePyc, strings
+from os import path
+from utils.decompile import disassemblePyc
 from utils.deobfuscation import MatchWebhook
 from cryptography.fernet import Fernet
 
