@@ -1,0 +1,24 @@
+{
+    "deletemessage": {
+        "content": ":clown: @everyone :clown:",
+        "embeds": [
+            {
+                "title": "ayy lmao looks like your webhook got deleted",
+                "description": "lmao nerd you thought :nerd:",
+                "color": 16711680
+            }
+        ]
+    },
+    "spammessage": {
+        "content": "@everyone",
+        "embeds": [
+            {
+                "title": "Your obfuscation sucks and you should reconsider your life choices",
+                "description": "imagine trying to steal lmfao nigger kys fucking nerd",
+                "color": 16711680
+            }
+        ]
+    },
+    "deleteafterdeobf": false,
+    "telegram_message": "test"
+}
