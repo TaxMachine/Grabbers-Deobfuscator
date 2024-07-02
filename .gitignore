@@ -1,0 +1,10 @@
+temp/
+!pycdc.exe
+!pycdas.exe
+__pycache__/
+grabber/
+*_extracted
+deobf.*/
+out/
+.idea/
+.vscode/
