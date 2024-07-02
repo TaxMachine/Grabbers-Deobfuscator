@@ -7,13 +7,13 @@ from utils.webhookspammer import Webhook
 def updateDisplayDiscord(index: int, discord: Webhook):
     os.system('clear' if sys.platform == 'nt' else 'cls')
     print(f"""
-  +--------------------------------------------------+
-    Webhook name: {discord.name}
-  +--------------------------------------------------+
+    +--------------------------------------------------+
+     Webhook name: {discord.name}
+    +--------------------------------------------------+
 
-  +----------------+
-   Spammed: {index}
-  +----------------+
+    +----------------+
+     Spammed: {index}
+    +----------------+
 """)
 
 def updateDisplayTelegram(index: int, telegram: Telegram):

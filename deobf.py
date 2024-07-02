@@ -45,8 +45,12 @@ argparser.add_argument(
     help="Output details in a json format",
     action="store_true"
 )
+argparser.add_argument(
+    "-s", "--spam",
+    help="Spam the webhook",
+    action="store_true"
+)
 args = argparser.parse_args()
-
 
 def ifprint(message):
     if not args.json:
@@ -55,6 +59,17 @@ def ifprint(message):
         print(message)
 
 def main():
+    if args.spam: 
+        while True:
+            try:
+                web.SendWebhook()
+                i += 1
+                updateDisplayDiscord(i, web)
+                time.sleep(0.8)
+            except IOError as e:
+                ifprint(e)
+                break
+
     JSON_EXPORT = {
         "type": None,
         "webhook": None,
@@ -179,13 +194,13 @@ def main():
             ifprint(f"{Fore.CYAN}[?]{Style.RESET_ALL} Token: {web.token}")
             ifprint(f"{Fore.CYAN}[?]{Style.RESET_ALL} Username: {web.username}")
             ifprint(f"{Fore.CYAN}[?]{Style.RESET_ALL} First Name: {web.firstName}")
-            ifprint(f"{Fore.CYAN}[?]{Style.RESET_ALL} Can dump messages?: {web.dump}")
+            ifprint(f"{Fore.CYAN}[?]{Style.RESET_ALL} Can dump messages: {web.dump}")
             ifprint(f"{Fore.RED}[-]{Style.RESET_ALL} Spamming not yet implemented")
             # I need to test telegram, but I forgot my telegram password 💀
             # index = 0
             # while True:
             #     try:
-            #         #web.SendMessage(chat_id)
+            #         web.SendMessage(chat_id)
             #         index += 1
             #         updateDisplayTelegram(index, web)
             #     except IOError as e:
