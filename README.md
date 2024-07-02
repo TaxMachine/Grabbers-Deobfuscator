@@ -1,4 +1,4 @@
-## forked from ![TaxMachine Deobfuscator](https://github.com/TaxMachine/Grabbers-Deobfuscator)
+## forked from [TaxMachine Deobfuscator](https://github.com/TaxMachine/Grabbers-Deobfuscator)
 # Grabbers Deobfuscator Cool Edition
 
 This repository contains some methods to disassemble and deobfuscate discord malwares (Blank, and others). It will give you the webhook and validate it if it found one.
