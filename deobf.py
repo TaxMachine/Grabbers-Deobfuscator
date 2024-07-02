@@ -59,10 +59,11 @@ def ifprint(message):
         print(message)
 
 def main():
-    if args.spam: 
+    if args.spam:
+        _webhook = args.filename
         while True:
             try:
-                web.SendWebhook()
+                _webhook.SendWebhook()
                 i += 1
                 updateDisplayDiscord(i, web)
                 time.sleep(0.8)
