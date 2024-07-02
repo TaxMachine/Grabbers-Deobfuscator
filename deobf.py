@@ -59,18 +59,6 @@ def ifprint(message):
         print(message)
 
 def main():
-    if args.spam:
-        _webhook = args.filename
-        while True:
-            try:
-                _webhook.SendWebhook()
-                i += 1
-                updateDisplayDiscord(i, web)
-                time.sleep(0.8)
-            except IOError as e:
-                ifprint(e)
-                break
-
     JSON_EXPORT = {
         "type": None,
         "webhook": None,
