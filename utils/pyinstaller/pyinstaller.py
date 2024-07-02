@@ -1,5 +1,5 @@
-from pyinstaller.extractors.pyinstxtractor import PyInstArchive # type: ignore
-from pyinstaller.extractors.pyinstxtractorng import PyInstArchive as PyInstArchiveNG # type: ignore
+from utils.pyinstaller.extractors.pyinstxtractor import PyInstArchive
+from utils.pyinstaller.extractors.pyinstxtractorng import PyInstArchive as PyInstArchiveNG
 
 from typing import List
 

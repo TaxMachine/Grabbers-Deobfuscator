@@ -1,7 +1,6 @@
-import requests # type: ignore
+import requests
 
-from config import Config # type: ignore
-
+from utils.config import Config
 
 class Telegram:
     def __init__(self, token: str):

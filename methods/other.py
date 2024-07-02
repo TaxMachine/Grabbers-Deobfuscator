@@ -1,9 +1,9 @@
 # Thank you to meisr cuz yes
 import re, base64, marshal, zlib, dis, bz2, lzma, gzip
 from os import path
-from decompile import disassemblePyc # type: ignore
-from deobfuscation import MatchWebhook # type: ignore
-from cryptography.fernet import Fernet # type: ignore
+from utils.decompile import disassemblePyc
+from utils.deobfuscation import MatchWebhook
+from cryptography.fernet import Fernet
 
 class OtherDeobf:
     def __init__(self, dir, entries):

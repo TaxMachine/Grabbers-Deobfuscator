@@ -1,6 +1,6 @@
 import os
-from deobfuscation import MatchWebhook # type: ignore
-from decompile import strings # type: ignore
+from utils.deobfuscation import MatchWebhook
+from utils.decompile import strings
 class NotObfuscated:
     def __init__(self, dir, entries):
         self.extractiondir = dir

@@ -1,3 +1,19 @@
+"""
+PyInstaller Extractor NG v1.0 (Supports pyinstaller 5.10.1, 5.10.0, 5.9.0, 5.8.0, 5.7.0, 5.6.2, 5.6.1, 5.6, 5.5, 5.4.1, 5.4, 5.3, 5.2, 5.1, 5.0.1, 5.0, 4.10, 4.9, 4.8, 4.7, 4.6, 4.5.1, 4.5, 4.4, 4.3, 4.2, 4.1, 4.0, 3.6, 3.5, 3.4, 3.3, 3.2, 3.1, 3.0, 2.1, 2.0)
+Author : Extreme Coders
+E-mail : extremecoders(at)hotmail(dot)com
+Web    : https://0xec.blogspot.com
+Url    : https://github.com/pyinstxtractor/pyinstxtractor-ng
+
+This script extracts a pyinstaller generated executable file. 
+Uses the xdis library to unmarshal code objects, hence you should
+be able to decompile an executable from any Python version without
+being restricted to use the same version of Python for running the
+script as well.
+
+Licensed under GNU General Public License (GPL) v3.
+"""
+
 import os
 import sys
 import zlib
@@ -6,11 +22,11 @@ import argparse
 
 from uuid import uuid4 as uniquename
 
-from Crypto.Cipher import AES # type: ignore
-from Crypto.Util import Counter # type: ignore
+from Crypto.Cipher import AES
+from Crypto.Util import Counter
 
-from xdis.unmarshal import load_code # type: ignore
-from pyinstaller.pyinstallerExceptions import ExtractionError # type: ignore
+from xdis.unmarshal import load_code
+from utils.pyinstaller.pyinstallerExceptions import ExtractionError
 
 
 def pycHeader2Magic(header):

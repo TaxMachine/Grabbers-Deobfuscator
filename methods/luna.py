@@ -1,5 +1,5 @@
 import os
-from deobfuscation import BlankStage3, BlankStage4 # type: ignore
+from utils.deobfuscation import BlankStage3, BlankStage4
 
 class LunaDeobf:
     def __init__(self, dir, entries):

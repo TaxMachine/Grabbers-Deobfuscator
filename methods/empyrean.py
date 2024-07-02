@@ -1,5 +1,5 @@
 import os, sys, importlib.util
-from colorama import Fore, Style, just_fix_windows_console, init # type: ignore
+from colorama import Fore, Style, just_fix_windows_console, init
 just_fix_windows_console()
 init(autoreset=True)
 

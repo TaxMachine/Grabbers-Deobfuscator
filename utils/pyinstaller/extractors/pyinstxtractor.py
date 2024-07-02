@@ -1,3 +1,88 @@
+"""
+PyInstaller Extractor v2.0 (Supports pyinstaller 6.6.0, 6.5.0, 6.4.0, 6.3.0, 6.2.0, 6.1.0, 6.0.0, 5.13.2, 5.13.1, 5.13.0, 5.12.0, 5.11.0, 5.10.1, 5.10.0, 5.9.0, 5.8.0, 5.7.0, 5.6.2, 5.6.1, 5.6, 5.5, 5.4.1, 5.4, 5.3, 5.2, 5.1, 5.0.1, 5.0, 4.10, 4.9, 4.8, 4.7, 4.6, 4.5.1, 4.5, 4.4, 4.3, 4.2, 4.1, 4.0, 3.6, 3.5, 3.4, 3.3, 3.2, 3.1, 3.0, 2.1, 2.0)
+Author : Extreme Coders
+E-mail : extremecoders(at)hotmail(dot)com
+Web    : https://0xec.blogspot.com
+Date   : 26-March-2020
+Url    : https://github.com/extremecoders-re/pyinstxtractor
+
+For any suggestions, leave a comment on
+https://forum.tuts4you.com/topic/34455-pyinstaller-extractor/
+
+This script extracts a pyinstaller generated executable file.
+Pyinstaller installation is not needed. The script has it all.
+
+For best results, it is recommended to run this script in the
+same version of python as was used to create the executable.
+This is just to prevent unmarshalling errors(if any) while
+extracting the PYZ archive.
+
+Usage : Just copy this script to the directory where your exe resides
+        and run the script with the exe file name as a parameter
+
+C:\\path\\to\\exe\\>python pyinstxtractor.py <filename>
+$ /path/to/exe/python pyinstxtractor.py <filename>
+
+Licensed under GNU General Public License (GPL) v3.
+You are free to modify this source.
+
+CHANGELOG
+================================================
+
+Version 1.1 (Jan 28, 2014)
+-------------------------------------------------
+- First Release
+- Supports only pyinstaller 2.0
+
+Version 1.2 (Sept 12, 2015)
+-------------------------------------------------
+- Added support for pyinstaller 2.1 and 3.0 dev
+- Cleaned up code
+- Script is now more verbose
+- Executable extracted within a dedicated sub-directory
+
+(Support for pyinstaller 3.0 dev is experimental)
+
+Version 1.3 (Dec 12, 2015)
+-------------------------------------------------
+- Added support for pyinstaller 3.0 final
+- Script is compatible with both python 2.x & 3.x (Thanks to Moritz Kroll @ Avira Operations GmbH & Co. KG)
+
+Version 1.4 (Jan 19, 2016)
+-------------------------------------------------
+- Fixed a bug when writing pyc files >= version 3.3 (Thanks to Daniello Alto: https://github.com/Djamana)
+
+Version 1.5 (March 1, 2016)
+-------------------------------------------------
+- Added support for pyinstaller 3.1 (Thanks to Berwyn Hoyt for reporting)
+
+Version 1.6 (Sept 5, 2016)
+-------------------------------------------------
+- Added support for pyinstaller 3.2
+- Extractor will use a random name while extracting unnamed files.
+- For encrypted pyz archives it will dump the contents as is. Previously, the tool would fail.
+
+Version 1.7 (March 13, 2017)
+-------------------------------------------------
+- Made the script compatible with python 2.6 (Thanks to Ross for reporting)
+
+Version 1.8 (April 28, 2017)
+-------------------------------------------------
+- Support for sub-directories in .pyz files (Thanks to Moritz Kroll @ Avira Operations GmbH & Co. KG)
+
+Version 1.9 (November 29, 2017)
+-------------------------------------------------
+- Added support for pyinstaller 3.3
+- Display the scripts which are run at entry (Thanks to Michael Gillespie @ malwarehunterteam for the feature request)
+
+Version 2.0 (March 26, 2020)
+-------------------------------------------------
+- Project migrated to github
+- Supports pyinstaller 3.6
+- Added support for Python 3.7, 3.8
+- The header of all extracted pyc's are now automatically fixed
+"""
+
 from __future__ import print_function
 import os
 import struct
@@ -5,7 +90,7 @@ import marshal
 import zlib
 import sys
 from uuid import uuid4 as uniquename
-from pyinstaller.pyinstallerExceptions import ExtractionError # type: ignore
+from utils.pyinstaller.pyinstallerExceptions import ExtractionError
 
 
 class CTOCEntry:

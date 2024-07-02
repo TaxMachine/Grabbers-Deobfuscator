@@ -4,25 +4,26 @@ import os
 import shutil
 import sys
 import time
-import pyperclip # type: ignore
+import pyperclip
 from os.path import join, dirname, exists
 
-from methods.ben import BenDeobf # type: ignore
-from methods.blank import BlankDeobf # type: ignore
-from methods.empyrean import VespyDeobf # type: ignore
-from methods.luna import LunaDeobf # type: ignore
-from methods.notobf import NotObfuscated # type: ignore
-from methods.other import OtherDeobf # type: ignore
-from decompile import unzipJava, checkUPX # type: ignore
-from download import TryDownload # type: ignore
-from pyinstaller.pyinstaller import ExtractPYInstaller # type: ignore
-from pyinstaller.pyinstallerExceptions import ExtractionError # type: ignore
-from webhookspammer import Webhook # type: ignore
-from telegram import Telegram # type: ignore
-from config import Config # type: ignore
-from display import updateDisplayDiscord # type: ignore
+from methods.ben import BenDeobf
+from methods.blank import BlankDeobf
+from methods.empyrean import VespyDeobf
+from methods.luna import LunaDeobf
+from methods.notobf import NotObfuscated
+from methods.other import OtherDeobf
+from utils.decompile import unzipJava, checkUPX
+from utils.download import TryDownload
+from utils.pyinstaller.pyinstaller import ExtractPYInstaller
+from utils.pyinstaller.pyinstallerExceptions import ExtractionError
+from utils.webhookspammer import Webhook
+from utils.telegram import Telegram
+from utils.config import Config
+from utils.display import updateDisplayDiscord
+
 import ctypes
-from colorama import Fore, Style, just_fix_windows_console, init # type: ignore
+from colorama import Fore, Style, just_fix_windows_console, init
 ctypes.windll.kernel32.SetConsoleTitleW("Grabber Deobfuscator")
 just_fix_windows_console()
 init(autoreset=True)
@@ -40,7 +41,7 @@ argparser.add_argument(
     action="store_true"
 )
 argparser.add_argument(
-    "-o", "--output",
+    "-j", "--json",
     help="Output details in a json format",
     action="store_true"
 )

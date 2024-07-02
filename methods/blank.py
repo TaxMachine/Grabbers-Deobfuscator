@@ -1,7 +1,7 @@
 import base64, os, zlib, zipfile, re, base64, io
 
-from pyaes import AESModeOfOperationGCM # type: ignore
-from deobfuscation import BlankStage3, BlankStage4 # type: ignore
+from utils.pyaes import AESModeOfOperationGCM
+from utils.deobfuscation import BlankStage3, BlankStage4
 
 
 class AuthTag:

@@ -1,9 +1,8 @@
 import os
-import requests # type: ignore
-from bs4 import BeautifulSoup # type: ignore
+import requests
+from bs4 import BeautifulSoup
 
 from typing import Dict, Callable
-
 
 def TryDownload(url):
     URL_TABLES: Dict[str, Callable[[str], str]] = {
@@ -14,7 +13,6 @@ def TryDownload(url):
         if url.startswith(func):
             return URL_TABLES[func](url)
     return DownloadFile(url)
-
 
 def DownloadFile(url: str) -> str:
     if not os.path.exists("temp"):
@@ -29,13 +27,11 @@ def DownloadFile(url: str) -> str:
                 f.write(chunk)
     return local_filename
 
-
 def MediafireDownload(url: str) -> str:
     r = requests.get(url)
     soup = BeautifulSoup(r.text, "lxml")
     download = soup.find("a", {"aria-label": "Download file"})
     return DownloadFile(download.attrs["href"])
-
 
 def GetTinyUrl(url: str) -> str:
     r = requests.get(url)

@@ -1,11 +1,10 @@
 from os.path import join, dirname
 
 import json
-import requests # type: ignore
+import requests
 import time
 
-from config import Config # type: ignore
-
+from utils.config import Config
 
 class Webhook:
     def __init__(self, webhook):
