@@ -49,7 +49,7 @@ args = argparser.parse_args()
 
 
 def ifprint(message):
-    if not args.output:
+    if not args.json:
         print(message)
     else:
         print(message)
@@ -115,7 +115,7 @@ def main():
         sys.exit(1)
 
     JSON_EXPORT["webhook"] = webhook
-    if args.output:
+    if args.json:
         print(json.dumps(JSON_EXPORT))
         exit(0)
     if type(webhook) != str:
