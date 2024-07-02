@@ -24,12 +24,13 @@ from utils.display import updateDisplayDiscord
 
 import ctypes
 from colorama import Fore, Style, just_fix_windows_console, init
-ctypes.windll.kernel32.SetConsoleTitleW("Grabber Deobfuscator")
+ctypes.windll.kernel32.SetConsoleTitleW("Grabbers Deobfuscator")
 just_fix_windows_console()
 init(autoreset=True)
 
 argparser = argparse.ArgumentParser(
-    description="Grabber Deobfuscator"
+    description="Grabbers Deobfuscator\nPls star https://github.com/TaxMachine/Grabbers-Deobfuscator",
+    epilog="Made by TaxMachine"
 )
 argparser.add_argument(
     "filename",
