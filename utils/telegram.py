@@ -2,7 +2,6 @@ import requests
 
 from utils.config import Config
 
-
 class Telegram:
     def __init__(self, token: str):
         self.token = token

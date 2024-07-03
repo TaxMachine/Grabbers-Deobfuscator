@@ -5,11 +5,7 @@
             {
                 "title": "ayy lmao looks like your webhook got deleted",
                 "description": "lmao nerd you thought :nerd:",
-                "color": 16711680,
-                "author": {
-                    "name": "TaxMachine on top",
-                    "url": "https://github.com/TaxMachine/Grabbers-Deobfuscator"
-                }
+                "color": 16711680
             }
         ]
     },
@@ -18,12 +14,8 @@
         "embeds": [
             {
                 "title": "Your obfuscation sucks and you should reconsider your life choices",
-                "description": "lmfao kys fucking nerd",
-                "color": 16711680,
-                "author": {
-                    "name": "TaxMachine on top",
-                    "url": "https://github.com/TaxMachine/Grabbers-Deobfuscator"
-                }
+                "description": "imagine trying to steal nerd",
+                "color": 16711680
             }
         ]
     },

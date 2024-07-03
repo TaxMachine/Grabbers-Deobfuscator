@@ -6,7 +6,6 @@ import time
 
 from utils.config import Config
 
-
 class Webhook:
     def __init__(self, webhook):
         self.name = None

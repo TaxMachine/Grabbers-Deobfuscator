@@ -2,7 +2,6 @@ import json
 
 from os.path import dirname, exists, join
 
-
 class Config:
     def __init__(self):
         if not exists(join(dirname(__file__), "..", "config.json")):

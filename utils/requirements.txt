@@ -1,0 +1,7 @@
+xdis
+requests
+pycryptodome
+beautifulsoup4
+lxml
+nuitka
+pyperclip
