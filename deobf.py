@@ -100,7 +100,8 @@ def main():
                 if webhook:
                     JSON_EXPORT["type"] = deobfuscator.__name__
                     break
-            except:
+            except Exception as e:
+                print(e)
                 continue
     
     if webhook == "" or webhook is None:

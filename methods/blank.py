@@ -1,4 +1,4 @@
-import base64, os, zlib, zipfile, re, base64, io
+import os, zlib, zipfile, re, base64, io
 
 from utils.pyaes import AESModeOfOperationGCM
 from utils.deobfuscation import BlankStage3, BlankStage4
@@ -24,6 +24,7 @@ class BlankDeobf:
         data = f.read()
         f.close()
         data = data.split(b"stub-oz,")[-1].split(b"\x63\x03")[0].split(b"\x10")
+        print(data[0].split(b"\xDA")[0])
         key = base64.b64decode(data[0].split(b"\xDA")[0].decode())
         iv = base64.b64decode(data[-1].decode())
         return AuthTag(
@@ -50,8 +51,13 @@ class BlankDeobf:
                     raise ValueError("Key length is invalid")
                 if len(authtags.iv) != 12:
                     raise ValueError("IV length is invalid")
+                
+                print(f"{authtags.key=}")
+                print(f"{authtags.iv=}")
 
-                encryptedfile = open(os.path.join(self.extractiondir, "blank.aes"), "rb").read()
+                aesfile = "luna.aes" if os.path.exists(os.path.join(self.extractiondir, "luna.aes")) else "blank.aes"
+                print(f"{aesfile=}")
+                encryptedfile = open(os.path.join(self.extractiondir, aesfile), "rb").read()
                 try:
                     reversedstr = encryptedfile[::-1]
                     encryptedfile = zlib.decompress(reversedstr)
